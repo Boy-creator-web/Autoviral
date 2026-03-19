@@ -1,0 +1,38 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: autoviral-backend
+    env_file:
+      - ./backend/.env.example
+    environment:
+      DATABASE_URL: postgresql+psycopg2://autoviral:autoviral@postgres:5432/autoviral
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: autoviral-postgres
+    environment:
+      POSTGRES_DB: autoviral
+      POSTGRES_USER: autoviral
+      POSTGRES_PASSWORD: autoviral
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: autoviral-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
