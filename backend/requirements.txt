@@ -4,6 +4,8 @@ sqlalchemy
 psycopg2-binary
 redis
 celery
+requests
+pytest
 pydantic-settings
 python-dotenv
 passlib[bcrypt]

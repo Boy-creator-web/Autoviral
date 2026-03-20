@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-@router.post("/generate", response_model=VideoJobQueuedResponse, status_code=status.HTTP_202_ACCEPTED)
+@router.post("/generate", response_model=VideoJobQueuedResponse, status_code=status.HTTP_201_CREATED)
 async def generate_video_endpoint(
     payload: VideoGenerateRequest,
     db: Session = Depends(get_db),

@@ -1,4 +1,4 @@
-.PHONY: up down logs-backend logs-worker logs-scraper ps check health smoke smoke-import smoke-scraper
+.PHONY: up down logs-backend logs-worker logs-scraper ps check health smoke smoke-import smoke-scraper smoke-pytest
 
 TAIL ?= 50
 SERVICE ?= backend
@@ -50,3 +50,6 @@ smoke-import:
 
 smoke-scraper:
 	python3 scripts/smoke_test_backend.py --url=http://localhost:8000 --check-scraper-async
+
+smoke-pytest:
+	python3 -m pytest backend/tests/test_smoke.py -v -s

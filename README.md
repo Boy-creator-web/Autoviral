@@ -125,6 +125,12 @@ Untuk cek tambahan endpoint scraper async (butuh Redis/Celery aktif):
 make smoke-scraper
 ```
 
+Untuk smoke-test otomatis endpoint (sesuai alur API utama), jalankan:
+
+```bash
+make smoke-pytest
+```
+
 ### Scraper async (terkoneksi Redis + Celery)
 
 Untuk menjalankan scraper di background worker, panggil endpoint:
