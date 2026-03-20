@@ -22,7 +22,7 @@ def queue_scraper_analysis_job(payload: dict[str, Any]) -> str:
             kwargs={"payload": payload},
             queue=settings.scraper_queue_name,
         )
-        register_scraper_job(job_id=task.id, payload=payload)
+        register_scraper_job(job_id=task.id, payload=payload, mode="async")
         logger.info("Queued scraper Celery task job_id=%s", task.id)
         return task.id
     except Exception as err:
@@ -35,11 +35,19 @@ def get_scraper_analysis_status(job_id: str) -> dict[str, Any]:
     try:
         result = AsyncResult(job_id, app=celery_app)
         meta = get_scraper_job_meta(job_id) or {}
+        state = result.state
+        if state == "PENDING" and meta.get("state") == "completed":
+            state = "SUCCESS"
+        elif state == "PENDING" and meta.get("state") == "failed":
+            state = "FAILURE"
+
+        resolved_result = result.result if result.successful() else meta.get("result")
+        resolved_error = str(result.result) if result.failed() else meta.get("error")
         return {
             "job_id": job_id,
-            "state": result.state,
-            "result": result.result if result.successful() else None,
-            "error": str(result.result) if result.failed() else None,
+            "state": state,
+            "result": resolved_result,
+            "error": resolved_error,
             "meta": meta,
         }
     except Exception as err:

@@ -161,6 +161,7 @@ GET /api/v1/scraper/status/{job_id}
 Base path API: `/api/v1`
 
 - `GET /health`
+- `GET /health/dependencies`
 - `POST /users`
 - `GET /users`
 - `POST /synthetic-humans`
@@ -179,6 +180,16 @@ Base path API: `/api/v1`
 - `POST /human/create`
 - `GET /human/list`
 - `POST /human/train`
+
+## Verifikasi Sinkronisasi Service
+
+Setelah `docker compose up --build`, verifikasi koneksi antar service:
+
+```bash
+curl -s http://localhost:8000/api/v1/health/dependencies | jq
+```
+
+Output `status: "ok"` berarti backend, PostgreSQL, Redis, dan Celery broker sudah sinkron.
 
 ## Catatan
 

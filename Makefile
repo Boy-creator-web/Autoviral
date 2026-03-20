@@ -1,4 +1,4 @@
-.PHONY: up down logs-backend logs-worker logs-scraper ps check
+.PHONY: up down logs-backend logs-worker logs-scraper ps check health
 
 TAIL ?= 50
 SERVICE ?= backend
@@ -38,3 +38,6 @@ logs-scraper:
 
 check:
 	python3 -m compileall backend
+
+health:
+	curl -s http://localhost:8000/api/v1/health/dependencies

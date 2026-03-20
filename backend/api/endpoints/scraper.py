@@ -20,6 +20,7 @@ from services.scraper import (
     list_scraper_insights,
     queue_scraper_analysis_job,
     run_manual_scraper_analysis,
+    set_scraper_job_state,
 )
 
 logger = logging.getLogger(__name__)
@@ -43,14 +44,25 @@ def analyze_scraper_manually(
                 results=[],
             )
 
-        job_id = enqueue_scraper_job(payload.model_dump())
+        job_id = enqueue_scraper_job(payload.model_dump(), mode="sync")
         results = run_manual_scraper_analysis(db, payload=payload)
+        sync_result = {
+            "topic": payload.topic,
+            "saved_rows": len(results),
+            "scraper_data_ids": [row.id for row in results],
+        }
+        set_scraper_job_state(job_id, state="completed", result=sync_result)
         return ScraperAnalyzeResponse(
             job_id=job_id,
             status="completed",
             results=[ScraperDataRead.model_validate(row) for row in results],
         )
-    except RuntimeError as err:
+    except Exception as err:
+        try:
+            if "job_id" in locals():
+                set_scraper_job_state(job_id, state="failed", error=str(err))
+        except Exception:
+            logger.exception("Failed to update scraper sync job state")
         logger.exception("analyze_scraper_manually failed")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
