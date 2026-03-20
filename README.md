@@ -105,6 +105,26 @@ make logs-backend
 make logs-worker
 ```
 
+### Smoke-test backend
+
+Jalankan smoke-test import + endpoint health:
+
+```bash
+make smoke
+```
+
+Jika ingin cek impor Python saja (tanpa HTTP):
+
+```bash
+make smoke-import
+```
+
+Untuk cek tambahan endpoint scraper async (butuh Redis/Celery aktif):
+
+```bash
+make smoke-scraper
+```
+
 ### Scraper async (terkoneksi Redis + Celery)
 
 Untuk menjalankan scraper di background worker, panggil endpoint:

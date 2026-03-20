@@ -1,4 +1,4 @@
-.PHONY: up down logs-backend logs-worker logs-scraper ps check health
+.PHONY: up down logs-backend logs-worker logs-scraper ps check health smoke smoke-import smoke-scraper
 
 TAIL ?= 50
 SERVICE ?= backend
@@ -41,3 +41,12 @@ check:
 
 health:
 	curl -s http://localhost:8000/api/v1/health/dependencies
+
+smoke:
+	python3 scripts/smoke_test_backend.py --url=http://localhost:8000
+
+smoke-import:
+	python3 scripts/smoke_test_backend.py --skip-http
+
+smoke-scraper:
+	python3 scripts/smoke_test_backend.py --url=http://localhost:8000 --check-scraper-async
