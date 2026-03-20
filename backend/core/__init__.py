@@ -1,1 +1,1 @@
-# Core package for shared app configuration.
+"""Core package for backend configuration and database."""

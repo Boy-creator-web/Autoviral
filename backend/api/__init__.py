@@ -1,1 +1,1 @@
-# API package containing routers and schemas.
+"""API package."""

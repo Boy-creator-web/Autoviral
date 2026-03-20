@@ -1,9 +1,10 @@
+"""Main API router."""
+
 from fastapi import APIRouter
 
 from api.endpoints.health import router as health_router
 from api.endpoints.human import router as human_router
 from api.endpoints.scraper import router as scraper_router
-from api.endpoints.scraper_data import router as scraper_data_router
 from api.endpoints.synthetic_humans import router as synthetic_humans_router
 from api.endpoints.users import router as users_router
 from api.endpoints.video import router as video_router
@@ -18,7 +19,6 @@ api_router.include_router(
     tags=["synthetic-humans"],
 )
 api_router.include_router(videos_router, prefix="/videos", tags=["videos"])
-api_router.include_router(scraper_data_router, prefix="/scraper-data", tags=["scraper-data"])
 api_router.include_router(scraper_router, prefix="/scraper", tags=["scraper"])
 api_router.include_router(video_router, prefix="/video", tags=["video"])
 api_router.include_router(human_router, prefix="/human", tags=["human"])
