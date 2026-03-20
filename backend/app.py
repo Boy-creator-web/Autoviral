@@ -1,10 +1,16 @@
 from contextlib import asynccontextmanager
+import logging
 
 from fastapi import FastAPI
 
 from api.router import api_router
 from core.config import settings
 from core.database import init_db
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
+)
 
 
 @asynccontextmanager

@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     database_url: str = (
         "postgresql+psycopg2://autoviral:autoviral@postgres:5432/autoviral"
     )
+    redis_url: str = "redis://redis:6379/0"
+    scraper_queue_name: str = "scraper_jobs"
     secret_key: str = "change-this-secret"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 60
