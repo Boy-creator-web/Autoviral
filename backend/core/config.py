@@ -9,6 +9,9 @@ class Settings(BaseSettings):
     )
     redis_url: str = "redis://redis:6379/0"
     scraper_queue_name: str = "scraper_jobs"
+    video_queue_name: str = "video_render_jobs"
+    celery_broker_url: str = "redis://redis:6379/0"
+    celery_result_backend: str = "redis://redis:6379/0"
     secret_key: str = "change-this-secret"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 60

@@ -18,7 +18,9 @@ Backend starter untuk proyek **Autoviral** menggunakan **FastAPI**, **SQLAlchemy
 │   │       ├── health.py
 │   │       ├── users.py
 │   │       ├── synthetic_humans.py
+│   │       ├── human.py
 │   │       ├── videos.py
+│   │       ├── video.py
 │   │       └── scraper_data.py
 │   ├── core
 │   │   ├── config.py
@@ -34,7 +36,7 @@ Backend starter untuk proyek **Autoviral** menggunakan **FastAPI**, **SQLAlchemy
 │       ├── synthetic_human_service.py
 │       ├── video_service.py
 │       ├── scraper_service.py
-│       └── scraper
+│       ├── scraper
 │           ├── competitor_watch.py
 │           ├── trend_forecast.py
 │           ├── intent_detector.py
@@ -43,6 +45,17 @@ Backend starter untuk proyek **Autoviral** menggunakan **FastAPI**, **SQLAlchemy
 │           ├── intent_scorer.py
 │           ├── queue.py
 │           └── engine.py
+│       └── video
+│           ├── synthetic_human.py
+│           ├── video_generator.py
+│           ├── face_swap.py
+│           ├── audio_engine.py
+│           ├── queue.py
+│           ├── manager.py
+│           ├── tasks.py
+│           └── templates
+│               ├── template_video.py
+│               └── cinematic_styles.py
 └── docker-compose.yml
 ```
 
@@ -69,6 +82,7 @@ Service yang tersedia:
 - Swagger UI: `http://localhost:8000/docs`
 - PostgreSQL: `localhost:5432`
 - Redis: `localhost:6379`
+- Celery Worker: queue `video_render_jobs`
 
 ## Menjalankan Secara Lokal (Tanpa Docker)
 
@@ -122,6 +136,13 @@ Base path API: `/api/v1`
 - `GET /scraper-data`
 - `POST /scraper/analyze`
 - `GET /scraper/insights`
+- `POST /video/generate`
+- `POST /video/swap-face`
+- `POST /video/lip-sync`
+- `GET /video/status/{job_id}`
+- `POST /human/create`
+- `GET /human/list`
+- `POST /human/train`
 
 ## Catatan
 
