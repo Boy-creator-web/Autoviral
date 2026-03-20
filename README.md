@@ -84,6 +84,26 @@ Service yang tersedia:
 - Redis: `localhost:6379`
 - Celery Worker: queue `video_render_jobs`
 
+### Melihat log backend (aman untuk Compose v1/v2)
+
+Gunakan format ini agar tidak kena error `No such service: --tail`:
+
+```bash
+docker-compose logs --tail=50 backend
+```
+
+atau untuk Compose v2:
+
+```bash
+docker compose logs --tail=50 backend
+```
+
+Alternatif cepat lewat Makefile:
+
+```bash
+make logs-backend
+```
+
 ## Menjalankan Secara Lokal (Tanpa Docker)
 
 1. Masuk folder backend:
