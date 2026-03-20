@@ -1,6 +1,13 @@
 """API endpoint module exports."""
 
-from . import health, human, scraper, scraper_data, synthetic_humans, users, video, videos
+from api.endpoints import health
+from api.endpoints import human
+from api.endpoints import scraper
+from api.endpoints import scraper_data
+from api.endpoints import synthetic_humans
+from api.endpoints import users
+from api.endpoints import video
+from api.endpoints import videos
 
 __all__ = [
     "human",
