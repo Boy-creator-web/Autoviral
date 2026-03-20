@@ -1,5 +1,7 @@
 """API endpoint module exports."""
 
+# Keep explicit absolute imports to ensure `from api.endpoints import human`
+# and `from api.endpoints import video` resolve reliably.
 from api.endpoints import health
 from api.endpoints import human
 from api.endpoints import scraper
