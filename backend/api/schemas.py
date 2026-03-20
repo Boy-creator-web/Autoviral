@@ -86,4 +86,72 @@ class ScraperAnalyzeRequest(BaseModel):
 
 class ScraperAnalyzeResponse(BaseModel):
     job_id: str
-    results: list[ScraperDataRead]
+    status: str
+    results: list[ScraperDataRead] = Field(default_factory=list)
+
+
+class ScraperJobStatusResponse(BaseModel):
+    job_id: str
+    state: str
+    meta: dict | None = None
+    result: dict | None = None
+    error: str | None = None
+
+
+class HumanCreateRequest(BaseModel):
+    user_id: int
+    name: str = Field(min_length=1, max_length=255)
+    age: int = Field(ge=0, le=120)
+    gender: str = Field(min_length=1, max_length=50)
+    style: str = Field(min_length=1, max_length=100)
+    prompt: str = Field(min_length=1)
+
+
+class HumanTrainRequest(BaseModel):
+    human_id: int
+    user_photos: list[str] = Field(min_length=1)
+
+
+class HumanTrainResponse(BaseModel):
+    message: str
+    human: SyntheticHumanRead
+
+
+class VideoGenerateRequest(BaseModel):
+    user_id: int
+    human_id: int
+    title: str = Field(min_length=1, max_length=255)
+    script: str = Field(min_length=1)
+    duration: int = Field(gt=0, le=3600)
+
+
+class VideoSwapFaceRequest(BaseModel):
+    user_id: int
+    human_id: int
+    title: str = Field(min_length=1, max_length=255)
+    source_face: str = Field(min_length=1)
+    target_video: str = Field(min_length=1)
+
+
+class VideoLipSyncRequest(BaseModel):
+    user_id: int
+    human_id: int
+    title: str = Field(min_length=1, max_length=255)
+    video_path: str = Field(min_length=1)
+    audio_path: str = Field(min_length=1)
+
+
+class VideoJobQueuedResponse(BaseModel):
+    job_id: str
+    video: VideoRead
+    status: str
+
+
+class VideoJobStatusResponse(BaseModel):
+    job_id: str
+    state: str
+    video_id: int | None = None
+    video_status: str | None = None
+    file_path: str | None = None
+    result: dict | None = None
+    error: str | None = None

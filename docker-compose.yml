@@ -9,6 +9,9 @@ services:
       DATABASE_URL: postgresql+psycopg2://autoviral:autoviral@postgres:5432/autoviral
       REDIS_URL: redis://redis:6379/0
       SCRAPER_QUEUE_NAME: scraper_jobs
+      VIDEO_QUEUE_NAME: video_render_jobs
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
     ports:
       - "8000:8000"
     depends_on:
@@ -34,6 +37,25 @@ services:
     container_name: autoviral-redis
     ports:
       - "6379:6379"
+    restart: unless-stopped
+
+  celery-worker:
+    build:
+      context: ./backend
+    container_name: autoviral-celery-worker
+    env_file:
+      - ./backend/.env.example
+    environment:
+      DATABASE_URL: postgresql+psycopg2://autoviral:autoviral@postgres:5432/autoviral
+      REDIS_URL: redis://redis:6379/0
+      SCRAPER_QUEUE_NAME: scraper_jobs
+      VIDEO_QUEUE_NAME: video_render_jobs
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+    command: celery -A core.celery_app.celery_app worker --loglevel=info -Q video_render_jobs,scraper_jobs
+    depends_on:
+      - postgres
+      - redis
     restart: unless-stopped
 
 volumes:
