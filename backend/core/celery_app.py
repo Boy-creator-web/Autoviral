@@ -1,4 +1,4 @@
-"""Celery application configuration for asynchronous rendering jobs."""
+"""Celery application configuration for asynchronous video and scraper jobs."""
 
 from celery import Celery
 
@@ -8,7 +8,7 @@ celery_app = Celery(
     "autoviral",
     broker=settings.celery_broker_url,
     backend=settings.celery_result_backend,
-    include=["services.video.tasks"],
+    include=["services.video.tasks", "services.scraper.tasks"],
 )
 
 celery_app.conf.update(

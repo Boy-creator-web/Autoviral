@@ -82,7 +82,7 @@ Service yang tersedia:
 - Swagger UI: `http://localhost:8000/docs`
 - PostgreSQL: `localhost:5432`
 - Redis: `localhost:6379`
-- Celery Worker: queue `video_render_jobs`
+- Celery Worker: queue `video_render_jobs` dan `scraper_jobs`
 
 ### Melihat log backend (aman untuk Compose v1/v2)
 
@@ -102,6 +102,21 @@ Alternatif cepat lewat Makefile:
 
 ```bash
 make logs-backend
+make logs-worker
+```
+
+### Scraper async (terkoneksi Redis + Celery)
+
+Untuk menjalankan scraper di background worker, panggil endpoint:
+
+```bash
+POST /api/v1/scraper/analyze?run_async=true
+```
+
+Lalu pantau status:
+
+```bash
+GET /api/v1/scraper/status/{job_id}
 ```
 
 ## Menjalankan Secara Lokal (Tanpa Docker)
@@ -156,6 +171,7 @@ Base path API: `/api/v1`
 - `GET /scraper-data`
 - `POST /scraper/analyze`
 - `GET /scraper/insights`
+- `GET /scraper/status/{job_id}`
 - `POST /video/generate`
 - `POST /video/swap-face`
 - `POST /video/lip-sync`

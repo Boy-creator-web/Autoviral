@@ -48,10 +48,11 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg2://autoviral:autoviral@postgres:5432/autoviral
       REDIS_URL: redis://redis:6379/0
+      SCRAPER_QUEUE_NAME: scraper_jobs
       VIDEO_QUEUE_NAME: video_render_jobs
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
-    command: celery -A core.celery_app.celery_app worker --loglevel=info -Q video_render_jobs
+    command: celery -A core.celery_app.celery_app worker --loglevel=info -Q video_render_jobs,scraper_jobs
     depends_on:
       - postgres
       - redis

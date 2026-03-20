@@ -86,7 +86,16 @@ class ScraperAnalyzeRequest(BaseModel):
 
 class ScraperAnalyzeResponse(BaseModel):
     job_id: str
-    results: list[ScraperDataRead]
+    status: str
+    results: list[ScraperDataRead] = Field(default_factory=list)
+
+
+class ScraperJobStatusResponse(BaseModel):
+    job_id: str
+    state: str
+    meta: dict | None = None
+    result: dict | None = None
+    error: str | None = None
 
 
 class HumanCreateRequest(BaseModel):

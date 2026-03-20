@@ -1,4 +1,4 @@
-.PHONY: up down logs-backend ps
+.PHONY: up down logs-backend logs-worker logs-scraper ps check
 
 TAIL ?= 50
 SERVICE ?= backend
@@ -27,3 +27,14 @@ ps:
 logs-backend:
 	$(call ensure_compose)
 	$(COMPOSE) logs --tail=$(TAIL) $(SERVICE)
+
+logs-worker:
+	$(call ensure_compose)
+	$(COMPOSE) logs --tail=$(TAIL) celery-worker
+
+logs-scraper:
+	$(call ensure_compose)
+	$(COMPOSE) logs --tail=$(TAIL) backend
+
+check:
+	python3 -m compileall backend
