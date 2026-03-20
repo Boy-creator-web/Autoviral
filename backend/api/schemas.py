@@ -71,3 +71,19 @@ class ScraperDataRead(BaseModel):
     topic: str
     intent_score: float
     raw_data: str
+
+
+class ScraperAnalyzeRequest(BaseModel):
+    topic: str = Field(min_length=1, max_length=255)
+    competitor_signals: list[str] = Field(default_factory=list)
+    trend_points: list[float] = Field(default_factory=list)
+    user_actions: list[str] = Field(default_factory=list)
+    comments: list[str] = Field(default_factory=list)
+    competitor_contents: list[str] = Field(default_factory=list)
+    pain_points: list[str] = Field(default_factory=list)
+    lead_signals: list[str] = Field(default_factory=list)
+
+
+class ScraperAnalyzeResponse(BaseModel):
+    job_id: str
+    results: list[ScraperDataRead]

@@ -33,7 +33,16 @@ Backend starter untuk proyek **Autoviral** menggunakan **FastAPI**, **SQLAlchemy
 │       ├── user_service.py
 │       ├── synthetic_human_service.py
 │       ├── video_service.py
-│       └── scraper_service.py
+│       ├── scraper_service.py
+│       └── scraper
+│           ├── competitor_watch.py
+│           ├── trend_forecast.py
+│           ├── intent_detector.py
+│           ├── emotion_analyzer.py
+│           ├── competitor_hole.py
+│           ├── intent_scorer.py
+│           ├── queue.py
+│           └── engine.py
 └── docker-compose.yml
 ```
 
@@ -111,6 +120,8 @@ Base path API: `/api/v1`
 - `GET /videos`
 - `POST /scraper-data`
 - `GET /scraper-data`
+- `POST /scraper/analyze`
+- `GET /scraper/insights`
 
 ## Catatan
 

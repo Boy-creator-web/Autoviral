@@ -2,6 +2,7 @@ fastapi
 uvicorn[standard]
 sqlalchemy
 psycopg2-binary
+redis
 pydantic-settings
 python-dotenv
 passlib[bcrypt]
