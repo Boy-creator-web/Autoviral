@@ -8,7 +8,7 @@ celery_app = Celery(
     "autoviral",
     broker=settings.celery_broker_url,
     backend=settings.celery_result_backend,
-    include=["services.video.tasks", "services.scraper.tasks"],
+    include=["services.video.tasks", "services.scraper.tasks", "services.runpod.tasks"],
 )
 
 celery_app.conf.update(

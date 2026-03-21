@@ -11,6 +11,7 @@ from api.schemas import (
     ScraperAnalyzeRequest,
     ScraperAnalyzeResponse,
     ScraperDataRead,
+    ScraperInsightSummaryResponse,
     ScraperJobStatusResponse,
 )
 from core.database import get_db
@@ -21,6 +22,7 @@ from services.scraper import (
     queue_scraper_analysis_job,
     run_manual_scraper_analysis,
     set_scraper_job_state,
+    summarize_scraper_insights,
 )
 
 logger = logging.getLogger(__name__)
@@ -79,6 +81,17 @@ def get_scraper_insights(
     """Return persisted scraper insights from ScraperData table."""
     rows = list_scraper_insights(db, limit=limit, topic=topic)
     return [ScraperDataRead.model_validate(row) for row in rows]
+
+
+@router.get("/insights/summary", response_model=ScraperInsightSummaryResponse)
+def get_scraper_insights_summary(
+    limit: int = Query(default=200, ge=1, le=1000),
+    topic: str | None = Query(default=None, min_length=1, max_length=255),
+    db: Session = Depends(get_db),
+) -> ScraperInsightSummaryResponse:
+    """Return aggregated cross-feature scraper intelligence summary."""
+    summary = summarize_scraper_insights(db, limit=limit, topic=topic)
+    return ScraperInsightSummaryResponse.model_validate(summary)
 
 
 @router.get("/status/{job_id}", response_model=ScraperJobStatusResponse)
