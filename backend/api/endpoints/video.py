@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -16,11 +17,13 @@ from api.schemas import (
     VideoSwapFaceRequest,
 )
 from core.database import get_db
+from models.synthetic_human import SyntheticHuman
+from models.user import User
+from models.video import Video
 from services.video.manager import (
     get_render_job_status,
     queue_face_swap_job,
     queue_lip_sync_job,
-    queue_text_video_job,
 )
 
 logger = logging.getLogger(__name__)
@@ -32,20 +35,33 @@ async def generate_video_endpoint(
     payload: VideoGenerateRequest,
     db: Session = Depends(get_db),
 ) -> VideoJobQueuedResponse:
-    """Queue a script-based video generation job."""
+    """Return dummy video generation response without real rendering."""
     try:
-        job_id, video = await queue_text_video_job(
-            db,
+        user = db.get(User, payload.user_id)
+        if user is None:
+            raise ValueError("User not found")
+
+        human = db.get(SyntheticHuman, payload.human_id)
+        if human is None:
+            raise ValueError("Synthetic human not found")
+        if human.user_id != payload.user_id:
+            raise ValueError("Synthetic human does not belong to the selected user")
+
+        video = Video(
             title=payload.title,
-            script=payload.script,
+            status="mock_completed",
+            file_path=f"/mock/videos/{payload.human_id}_{uuid4().hex}.mp4",
             human_id=payload.human_id,
             user_id=payload.user_id,
-            duration=payload.duration,
         )
+        db.add(video)
+        db.commit()
+        db.refresh(video)
+
         return VideoJobQueuedResponse(
-            job_id=job_id,
+            job_id=f"mock-{uuid4().hex}",
             video=VideoRead.model_validate(video),
-            status="queued",
+            status="mock_completed",
         )
     except ValueError as err:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(err)) from err

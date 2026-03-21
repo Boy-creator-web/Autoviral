@@ -77,19 +77,12 @@ class ScraperDataRead(BaseModel):
 class ScraperAnalyzeRequest(BaseModel):
     topic: str = Field(min_length=1, max_length=255)
     competitor_signals: list[str] = Field(default_factory=list)
-    competitor_videos: list[str] = Field(default_factory=list)
-    competitor_comments: list[str] = Field(default_factory=list)
-    competitor_posts: list[str] = Field(default_factory=list)
     trend_points: list[float] = Field(default_factory=list)
-    forum_signals: list[str] = Field(default_factory=list)
     user_actions: list[str] = Field(default_factory=list)
-    user_text_signals: list[str] = Field(default_factory=list)
     comments: list[str] = Field(default_factory=list)
     competitor_contents: list[str] = Field(default_factory=list)
-    audience_questions: list[str] = Field(default_factory=list)
     pain_points: list[str] = Field(default_factory=list)
     lead_signals: list[str] = Field(default_factory=list)
-    user_activity_logs: list[str] = Field(default_factory=list)
 
 
 class ScraperAnalyzeResponse(BaseModel):
@@ -104,17 +97,6 @@ class ScraperJobStatusResponse(BaseModel):
     meta: dict | None = None
     result: dict | None = None
     error: str | None = None
-
-
-class ScraperInsightSummaryResponse(BaseModel):
-    topic: str | None = None
-    total_insights: int
-    by_source: dict[str, dict[str, float | int]]
-    high_intent_users: list[dict[str, str | float]] = Field(default_factory=list)
-    missed_topics: list[str] = Field(default_factory=list)
-    unanswered_questions: list[str] = Field(default_factory=list)
-    emotion_overview: dict[str, int] = Field(default_factory=dict)
-    latest_features: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class HumanCreateRequest(BaseModel):
@@ -172,7 +154,5 @@ class VideoJobStatusResponse(BaseModel):
     video_id: int | None = None
     video_status: str | None = None
     file_path: str | None = None
-    runpod_job_id: str | None = None
-    runpod_status: str | None = None
     result: dict | None = None
     error: str | None = None
