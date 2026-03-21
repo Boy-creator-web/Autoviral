@@ -172,5 +172,7 @@ class VideoJobStatusResponse(BaseModel):
     video_id: int | None = None
     video_status: str | None = None
     file_path: str | None = None
+    runpod_job_id: str | None = None
+    runpod_status: str | None = None
     result: dict | None = None
     error: str | None = None

@@ -41,6 +41,24 @@ def set_job_video_mapping(job_id: str, video_id: int) -> None:
         logger.exception("Failed to map job id=%s to video=%s", job_id, video_id)
 
 
+def set_job_runpod_mapping(job_id: str, runpod_job_id: str) -> None:
+    """Cache Celery job to RunPod job id mapping for status endpoint."""
+    try:
+        _client().set(f"video:runpod:{job_id}", runpod_job_id, ex=86400)
+    except RedisError:
+        logger.exception("Failed to map job id=%s to runpod_job_id=%s", job_id, runpod_job_id)
+
+
+def get_job_runpod_mapping(job_id: str) -> str | None:
+    """Return RunPod job id mapped to Celery job, if present."""
+    try:
+        value = _client().get(f"video:runpod:{job_id}")
+        return str(value) if value is not None else None
+    except RedisError:
+        logger.exception("Failed to fetch runpod mapping job_id=%s", job_id)
+        return None
+
+
 def get_job_video_mapping(job_id: str) -> int | None:
     """Return video id mapped to Celery job, if present."""
     try:

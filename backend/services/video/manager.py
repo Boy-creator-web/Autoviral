@@ -15,8 +15,18 @@ from core.celery_app import celery_app
 from models.synthetic_human import SyntheticHuman
 from models.user import User
 from models.video import Video
-from services.video.queue import get_job_video_mapping, register_render_job, set_job_video_mapping
-from services.video.tasks import render_face_swap_task, render_lip_sync_task, render_text_video_task
+from services.runpod.client import RunPodClient
+from services.runpod.tasks import (
+    runpod_render_face_swap_task,
+    runpod_render_lip_sync_task,
+    runpod_render_video_task,
+)
+from services.video.queue import (
+    get_job_runpod_mapping,
+    get_job_video_mapping,
+    register_render_job,
+    set_job_video_mapping,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -75,10 +85,10 @@ async def queue_text_video_job(
     try:
         await _validate_video_owner(db, user_id=user_id, human_id=human_id)
         video = await _create_queued_video(db, title=title, user_id=user_id, human_id=human_id)
-        task = render_text_video_task.apply_async(
+        task = runpod_render_video_task.apply_async(
             kwargs={
                 "video_id": video.id,
-                "script": script,
+                "prompt": script,
                 "human_id": human_id,
                 "duration": duration,
             },
@@ -108,7 +118,7 @@ async def queue_face_swap_job(
     try:
         await _validate_video_owner(db, user_id=user_id, human_id=human_id)
         video = await _create_queued_video(db, title=title, user_id=user_id, human_id=human_id)
-        task = render_face_swap_task.apply_async(
+        task = runpod_render_face_swap_task.apply_async(
             kwargs={
                 "video_id": video.id,
                 "source_face": source_face,
@@ -140,7 +150,7 @@ async def queue_lip_sync_job(
     try:
         await _validate_video_owner(db, user_id=user_id, human_id=human_id)
         video = await _create_queued_video(db, title=title, user_id=user_id, human_id=human_id)
-        task = render_lip_sync_task.apply_async(
+        task = runpod_render_lip_sync_task.apply_async(
             kwargs={
                 "video_id": video.id,
                 "video_path": video_path,
@@ -164,6 +174,8 @@ async def get_render_job_status(db: Session, *, job_id: str) -> dict[str, Any]:
     try:
         result = AsyncResult(job_id, app=celery_app)
         video_id = get_job_video_mapping(job_id)
+        runpod_job_id = get_job_runpod_mapping(job_id)
+        runpod_status: str | None = None
         video_status: str | None = None
         file_path: str | None = None
 
@@ -174,6 +186,13 @@ async def get_render_job_status(db: Session, *, job_id: str) -> dict[str, Any]:
                 video_status = video.status
                 file_path = video.file_path
 
+        if runpod_job_id:
+            try:
+                runpod_payload = RunPodClient().get_status(runpod_job_id)
+                runpod_status = str(runpod_payload.get("status")) if runpod_payload else None
+            except Exception:
+                logger.exception("Failed to resolve RunPod status job_id=%s", job_id)
+
         await asyncio.sleep(0)
         return {
             "job_id": job_id,
@@ -181,6 +200,8 @@ async def get_render_job_status(db: Session, *, job_id: str) -> dict[str, Any]:
             "video_id": video_id,
             "video_status": video_status,
             "file_path": file_path,
+            "runpod_job_id": runpod_job_id,
+            "runpod_status": runpod_status,
             "result": result.result if result.successful() else None,
             "error": str(result.result) if result.failed() else None,
         }
