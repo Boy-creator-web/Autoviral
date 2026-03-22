@@ -8,5 +8,6 @@ venv/
 
 .env
 backend/.env
+backend/test_autoviral.db
 
 .DS_Store
