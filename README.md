@@ -64,6 +64,27 @@ Service yang tersedia:
 - PostgreSQL: `localhost:5432`
 - Redis: `localhost:6379`
 
+### Dengan Makefile (lebih praktis)
+
+Jalankan stack utama:
+
+```bash
+make up
+```
+
+Cek status dan logs:
+
+```bash
+make ps
+make logs
+```
+
+Hentikan stack:
+
+```bash
+make down
+```
+
 ## Menjalankan Secara Lokal (Tanpa Docker)
 
 1. Masuk folder backend:
@@ -124,7 +145,42 @@ python3 -m pip install -r backend/requirements.txt
 python3 -m pytest -q backend/tests
 ```
 
+Atau via Docker:
+
+```bash
+make test
+```
+
+## Instalasi Auto Poster (Postiz)
+
+Stack Postiz sudah disiapkan dalam profile terpisah (`postiz`) di `docker-compose.yml`, jadi tidak bentrok dengan stack utama Autoviral.
+
+1. Pastikan Docker dan Docker Compose sudah terpasang.
+2. (Opsional tapi direkomendasikan) set environment Postiz di shell atau `.env` (minimal `POSTIZ_JWT_SECRET`).
+3. Jalankan Postiz:
+
+```bash
+make postiz-up
+```
+
+4. Akses:
+   - Postiz UI: `http://localhost:4007`
+   - Temporal UI: `http://localhost:8080`
+
+5. Lihat logs Postiz:
+
+```bash
+make postiz-logs
+```
+
+6. Hentikan stack Postiz:
+
+```bash
+make postiz-down
+```
+
 ## Catatan
 
 - Tabel database dibuat otomatis saat aplikasi startup.
 - Password user di-hash menggunakan `passlib` dengan skema `pbkdf2_sha256`.
+- Untuk produksi, ganti semua secret default (`BACKEND_SECRET_KEY`, `POSTIZ_JWT_SECRET`, password database).
