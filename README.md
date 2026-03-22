@@ -29,6 +29,9 @@ Backend starter untuk proyek **Autoviral** menggunakan **FastAPI**, **SQLAlchemy
 │   │   ├── synthetic_human.py
 │   │   ├── video.py
 │   │   └── scraper_data.py
+│   ├── tests
+│   │   ├── conftest.py
+│   │   └── test_api.py
 │   └── services
 │       ├── user_service.py
 │       ├── synthetic_human_service.py
@@ -112,7 +115,16 @@ Base path API: `/api/v1`
 - `POST /scraper-data`
 - `GET /scraper-data`
 
+## Menjalankan Test Otomatis
+
+Jalankan dari root proyek:
+
+```bash
+python3 -m pip install -r backend/requirements.txt
+python3 -m pytest -q backend/tests
+```
+
 ## Catatan
 
 - Tabel database dibuat otomatis saat aplikasi startup.
-- Password user di-hash menggunakan `passlib` (bcrypt).
+- Password user di-hash menggunakan `passlib` dengan skema `pbkdf2_sha256`.
