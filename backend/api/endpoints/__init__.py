@@ -1,4 +1,13 @@
-from . import health, users, synthetic_humans, videos, scraper, human, video
+from . import (
+    health,
+    human,
+    scraper,
+    scraper_insights,
+    synthetic_humans,
+    users,
+    video,
+    videos,
+)
 
 __all__ = [
     "health",
@@ -6,6 +15,7 @@ __all__ = [
     "synthetic_humans",
     "videos",
     "scraper",
+    "scraper_insights",
     "human",
     "video",
 ]

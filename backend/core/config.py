@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     secret_key: str = "change-this-secret"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 60
+    mirofish_base_url: str = "http://localhost:5001"
+    mirofish_timeout_seconds: int = 10
 
     model_config = SettingsConfigDict(
         env_file=".env",

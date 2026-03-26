@@ -118,3 +118,22 @@ def test_video_user_human_mismatch_returns_400(client):
     )
     assert response.status_code == 400
     assert response.json()["detail"] == "Synthetic human does not belong to the selected user"
+
+
+def test_scraper_insights_endpoint(client):
+    response = client.post(
+        "/api/v1/scraper/insights",
+        json={"seed_text": "skincare lokal"},
+    )
+    assert response.status_code == 201
+    payload = response.json()
+    assert payload["source"] == "mirofish"
+    assert payload["topic"]
+    assert isinstance(payload["intent_score"], float)
+    assert payload["raw_data"]
+
+    list_response = client.get("/api/v1/scraper/insights")
+    assert list_response.status_code == 200
+    rows = list_response.json()
+    assert len(rows) == 1
+    assert rows[0]["source"] == "mirofish"

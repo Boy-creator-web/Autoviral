@@ -1,6 +1,13 @@
 from fastapi import APIRouter
 
-from api.endpoints import health, scraper_data, synthetic_humans, users, videos
+from api.endpoints import (
+    health,
+    scraper_data,
+    scraper_insights,
+    synthetic_humans,
+    users,
+    videos,
+)
 
 api_router = APIRouter()
 api_router.include_router(health.router, tags=["health"])
@@ -12,3 +19,4 @@ api_router.include_router(
 )
 api_router.include_router(videos.router, prefix="/videos", tags=["videos"])
 api_router.include_router(scraper_data.router, prefix="/scraper-data", tags=["scraper-data"])
+api_router.include_router(scraper_insights.router, prefix="/scraper", tags=["scraper"])

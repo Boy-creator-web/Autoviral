@@ -71,3 +71,26 @@ class ScraperDataRead(BaseModel):
     topic: str
     intent_score: float
     raw_data: str
+
+
+class ScraperInsightRequest(BaseModel):
+    seed_text: str = Field(min_length=1, max_length=500)
+    product_data: dict = Field(default_factory=dict)
+
+
+class ScraperInsightRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    source: str
+    topic: str
+    intent_score: float
+    raw_data: str
+
+
+class ScraperInsightGenerateResponse(BaseModel):
+    id: int
+    source: str
+    topic: str
+    intent_score: float
+    raw_data: str
