@@ -43,6 +43,9 @@ class VideoCreate(BaseModel):
     file_path: str | None = Field(default=None, max_length=500)
     human_id: int
     user_id: int
+    auto_publish_platforms: list[str] = Field(default_factory=list)
+    caption: str | None = Field(default=None, max_length=5000)
+    tags: list[str] = Field(default_factory=list)
 
 
 class VideoRead(BaseModel):

@@ -120,6 +120,60 @@ def test_video_user_human_mismatch_returns_400(client):
     assert response.json()["detail"] == "Synthetic human does not belong to the selected user"
 
 
+def test_video_completed_triggers_social_post(client, monkeypatch):
+    calls = []
+
+    def fake_post_to_social(platform, video_path, caption, tags):
+        calls.append(
+            {
+                "platform": platform,
+                "video_path": video_path,
+                "caption": caption,
+                "tags": tags,
+            }
+        )
+        return "post_123"
+
+    monkeypatch.setattr("services.video_service.post_to_social", fake_post_to_social)
+
+    user = client.post(
+        "/api/v1/users/",
+        json={
+            "email": "poster@example.com",
+            "password": "password123",
+            "name": "Poster",
+        },
+    ).json()
+    human = client.post(
+        "/api/v1/synthetic-humans/",
+        json={
+            "name": "Influencer",
+            "age": 22,
+            "gender": "female",
+            "style": "beauty",
+            "user_id": user["id"],
+        },
+    ).json()
+
+    response = client.post(
+        "/api/v1/videos/",
+        json={
+            "title": "Auto upload",
+            "status": "completed",
+            "file_path": "/tmp/final.mp4",
+            "human_id": human["id"],
+            "user_id": user["id"],
+            "auto_publish_platforms": ["tiktok"],
+            "caption": "My first auto post",
+            "tags": ["autoviral", "demo"],
+        },
+    )
+    assert response.status_code == 201
+    assert len(calls) == 1
+    assert calls[0]["platform"] == "tiktok"
+    assert calls[0]["video_path"] == "/tmp/final.mp4"
+
+
 def test_scraper_insights_endpoint(client):
     response = client.post(
         "/api/v1/scraper/insights",
