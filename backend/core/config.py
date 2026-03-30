@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     secret_key: str = "change-this-secret"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 60
+    docs_enabled: bool = True
+    api_key_required: bool = False
+    api_key: str = ""
+    allowed_hosts_csv: str = ""
     mirofish_base_url: str = "http://localhost:5001"
     mirofish_timeout_seconds: int = 10
     postiz_api_base_url: str = "http://localhost:3000/api/public/v1"

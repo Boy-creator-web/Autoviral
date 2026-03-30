@@ -22,6 +22,18 @@ Panduan ini untuk operasi cepat di VPS agar saat crash bisa recovery dengan cepa
 - `ops/vps/healthcheck_stack.sh`
   - Cek container + endpoint utama
 
+- `ops/vps/hardening_apply.sh`
+  - Hardening baseline VPS:
+    - UFW allow: SSH, `8000`, `4007`
+    - deny internal port publik (`5432`, `6379`, `5001`, `3000`, `7233`, `8080`, `8969`)
+    - tambah rule `DOCKER-USER` untuk block port internal yang dipublish Docker
+    - rotate `SECRET_KEY` backend bila masih default
+    - disable docs (`DOCS_ENABLED=false`)
+    - aktifkan API key protection (`API_KEY_REQUIRED=true`)
+
+- `ops/vps/hardening_verify.sh`
+  - Verifikasi hasil hardening (port exposure, docs off, auth check)
+
 ## 2) Lokasi backup
 
 Default backup disimpan di:
@@ -67,7 +79,29 @@ chmod +x /root/autoviral/ops/vps/healthcheck_stack.sh
 /root/autoviral/ops/vps/healthcheck_stack.sh
 ```
 
-## 6) Recovery cepat saat crash
+## 6) Hardening keamanan baseline (disarankan)
+
+Jalankan sekali:
+
+```bash
+chmod +x /root/autoviral/ops/vps/hardening_apply.sh
+/root/autoviral/ops/vps/hardening_apply.sh
+```
+
+Lalu verifikasi:
+
+```bash
+chmod +x /root/autoviral/ops/vps/hardening_verify.sh
+/root/autoviral/ops/vps/hardening_verify.sh
+```
+
+Catatan:
+- Script hardening menyimpan API key backend yang digenerate otomatis ke:
+  - `/root/autoviral-secrets.env`
+- Gunakan nilainya pada header request:
+  - `X-API-Key: <AUTOVIRAL_API_KEY>`
+
+## 7) Recovery cepat saat crash
 
 ### Restore dari backup terbaru
 
@@ -82,7 +116,7 @@ chmod +x /root/autoviral/ops/vps/recover_autoviral.sh
 /root/autoviral/ops/vps/recover_autoviral.sh 20260330T120000Z
 ```
 
-## 7) Catatan penting
+## 8) Catatan penting
 
 - Script recovery mengasumsikan container DB sudah running.
 - Untuk data Postiz, restore uploads menggunakan volume `postiz_uploads`.
