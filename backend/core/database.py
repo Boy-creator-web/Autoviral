@@ -17,6 +17,6 @@ def get_db():
 
 
 def init_db() -> None:
-    from models import scraper_data, synthetic_human, user, video  # noqa: F401
+    from models import scraper_data, sales_lead, synthetic_human, user, video  # noqa: F401
 
     Base.metadata.create_all(bind=engine)

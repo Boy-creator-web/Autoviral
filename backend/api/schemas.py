@@ -97,3 +97,56 @@ class ScraperInsightGenerateResponse(BaseModel):
     topic: str
     intent_score: float
     raw_data: str
+
+
+class SalesLeadDiscoverRequest(BaseModel):
+    industry: str = Field(min_length=1, max_length=150)
+    region: str = Field(default="ID", min_length=2, max_length=32)
+    company_size: str = Field(default="smb", min_length=2, max_length=50)
+    count: int = Field(default=10, ge=1, le=50)
+
+
+class SalesLeadRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    source: str
+    company_name: str
+    company_domain: str
+    contact_name: str
+    contact_title: str
+    contact_email: str
+    company_size: str
+    geography: str
+    industry: str
+    pain_points_json: str
+    raw_signals_json: str
+    icp_score: float
+    intent_score: float
+    priority_score: float
+    outreach_status: str
+    outreach_draft: str | None = None
+    created_at: datetime
+
+
+class SalesLeadScoreRequest(BaseModel):
+    icp_industry: str = Field(min_length=1, max_length=150)
+    icp_region: str = Field(default="ID", min_length=2, max_length=32)
+
+
+class SalesLeadScoreResponse(BaseModel):
+    lead: SalesLeadRead
+
+
+class SalesOutreachDraftRequest(BaseModel):
+    channel: str = Field(default="email", min_length=2, max_length=32)
+
+
+class SalesOutreachDraftResponse(BaseModel):
+    lead: SalesLeadRead
+    draft: dict[str, str]
+
+
+class SalesPipelineListResponse(BaseModel):
+    count: int
+    leads: list[SalesLeadRead]

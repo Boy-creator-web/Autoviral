@@ -3,6 +3,7 @@ from . import (
     human,
     scraper,
     scraper_insights,
+    sales_intel,
     synthetic_humans,
     users,
     video,
@@ -16,6 +17,7 @@ __all__ = [
     "videos",
     "scraper",
     "scraper_insights",
+    "sales_intel",
     "human",
     "video",
 ]
