@@ -184,3 +184,28 @@ make postiz-down
 - Tabel database dibuat otomatis saat aplikasi startup.
 - Password user di-hash menggunakan `passlib` dengan skema `pbkdf2_sha256`.
 - Untuk produksi, ganti semua secret default (`BACKEND_SECRET_KEY`, `POSTIZ_JWT_SECRET`, password database).
+
+## Operasional VPS (Backup, Recovery, Healthcheck)
+
+Agar saat crash bisa recovery cepat, tersedia script ops di:
+
+```bash
+ops/vps/
+```
+
+Lihat panduan lengkap:
+
+```bash
+ops/vps/README.md
+```
+
+Ringkas:
+
+- Backup manual:
+  - `/root/autoviral/ops/vps/backup_autoviral.sh`
+- Install cron backup otomatis:
+  - `/root/autoviral/ops/vps/install_backup_cron.sh`
+- Healthcheck stack:
+  - `/root/autoviral/ops/vps/healthcheck_stack.sh`
+- Recovery dari backup terbaru:
+  - `/root/autoviral/ops/vps/recover_autoviral.sh`
