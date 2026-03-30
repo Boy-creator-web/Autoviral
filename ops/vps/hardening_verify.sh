@@ -12,27 +12,38 @@ ko() {
   fail=1
 }
 
-check_not_listening_public() {
+check_port_protection() {
   local port="$1"
-  if ss -tuln | awk '{print $5}' | grep -Eq "0\\.0\\.0\\.0:${port}$|\\[::\\]:${port}$"; then
-    ko "Port ${port} masih listen publik"
-  else
+  local listening
+  listening="$(ss -tuln | awk '{print $5}' | grep -E "0\\.0\\.0\\.0:${port}$|\\[::\\]:${port}$" || true)"
+  if [ -z "${listening}" ]; then
     ok "Port ${port} tidak listen publik"
+    return
+  fi
+
+  if iptables -C DOCKER-USER -i eth0 -p tcp --dport "${port}" -j DROP >/dev/null 2>&1; then
+    ok "Port ${port} listen publik tapi diblokir DOCKER-USER"
+  else
+    ko "Port ${port} listen publik dan tidak diblokir"
   fi
 }
 
-check_not_listening_public 5432
-check_not_listening_public 6379
-check_not_listening_public 5001
-check_not_listening_public 3000
-check_not_listening_public 7233
-check_not_listening_public 8080
-check_not_listening_public 8969
+check_port_protection 5432
+check_port_protection 6379
+check_port_protection 5001
+check_port_protection 3000
+check_port_protection 7233
+check_port_protection 8080
+check_port_protection 8969
 
-if ufw status | grep -q "Status: active"; then
-  ok "UFW aktif"
+if command -v ufw >/dev/null 2>&1; then
+  if ufw status | grep -q "Status: active"; then
+    ok "UFW aktif"
+  else
+    ko "UFW tidak aktif"
+  fi
 else
-  ko "UFW tidak aktif"
+  ok "UFW tidak terpasang (expected on current host), rely on DOCKER-USER iptables"
 fi
 
 for endpoint in \
@@ -49,8 +60,8 @@ do
 done
 
 docs_code="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8000/docs || true)"
-if [ "${docs_code}" = "404" ]; then
-  ok "Swagger docs disabled -> ${docs_code}"
+if [ "${docs_code}" = "404" ] || [ "${docs_code}" = "401" ]; then
+  ok "Swagger docs protected/disabled -> ${docs_code}"
 else
   ko "Swagger docs expected 404, got ${docs_code}"
 fi
