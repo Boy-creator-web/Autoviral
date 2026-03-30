@@ -34,6 +34,15 @@ Panduan ini untuk operasi cepat di VPS agar saat crash bisa recovery dengan cepa
 - `ops/vps/hardening_verify.sh`
   - Verifikasi hasil hardening (port exposure, docs off, auth check)
 
+- `ops/vps/hardening_phase2_apply.sh`
+  - Hardening perimeter:
+    - pasang Nginx reverse proxy untuk backend (`/` -> `127.0.0.1:8000`)
+    - rate limiting + connection limiting
+    - pasang fail2ban jail untuk abuse `401`/`429`
+
+- `ops/vps/hardening_phase2_verify.sh`
+  - Verifikasi service Nginx/fail2ban + proteksi API via reverse proxy
+
 ## 2) Lokasi backup
 
 Default backup disimpan di:
@@ -121,3 +130,19 @@ chmod +x /root/autoviral/ops/vps/recover_autoviral.sh
 - Script recovery mengasumsikan container DB sudah running.
 - Untuk data Postiz, restore uploads menggunakan volume `postiz_uploads`.
 - Simpan backup off-site juga (mis. object storage) untuk DR yang lebih aman.
+
+## 9) Hardening tahap 2 (Nginx + Fail2ban)
+
+Jalankan:
+
+```bash
+chmod +x /root/autoviral/ops/vps/hardening_phase2_apply.sh
+/root/autoviral/ops/vps/hardening_phase2_apply.sh
+```
+
+Verifikasi:
+
+```bash
+chmod +x /root/autoviral/ops/vps/hardening_phase2_verify.sh
+/root/autoviral/ops/vps/hardening_phase2_verify.sh
+```
