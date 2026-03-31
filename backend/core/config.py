@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     )
     autonomous_scheduler_enabled: bool = False
     autonomous_scheduler_tick_seconds: int = 30
+    gpu_coming_soon: bool = True
 
     model_config = SettingsConfigDict(
         env_file=".env",

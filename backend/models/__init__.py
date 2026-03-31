@@ -7,6 +7,7 @@ from models.autonomous_run import AutonomousRun
 from models.autonomous_plan import AutonomousPlan
 from models.viral_experiment import ViralExperiment
 from models.viral_metric import ViralMetric
+from models.viral_model_snapshot import ViralModelSnapshot
 from models.viral_variant import ViralVariant
 
 __all__ = [
@@ -20,4 +21,5 @@ __all__ = [
     "ViralExperiment",
     "ViralVariant",
     "ViralMetric",
+    "ViralModelSnapshot",
 ]

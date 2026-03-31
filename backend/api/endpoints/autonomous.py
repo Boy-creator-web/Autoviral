@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 
 from api.schemas import (
     AutonomousDashboardRead,
+    AutonomousDailyModeRequest,
+    AutonomousDailyModeResponse,
     AutonomousPlanCreateRequest,
     AutonomousPlanListResponse,
     AutonomousPlanRead,
@@ -13,11 +15,16 @@ from api.schemas import (
     AutonomousRunRead,
     AutonomousRunRequest,
     AutonomousSchedulerTickResponse,
+    DailyOpsBootstrapRequest,
+    DailyOpsBootstrapResponse,
 )
+from core.config import settings
 from core.database import get_db
 from models.autonomous_plan import AutonomousPlan
 from models.autonomous_run import AutonomousRun
 from services.autonomous_orchestrator_service import (
+    bootstrap_daily_mode,
+    bootstrap_daily_operations,
     create_autonomous_plan,
     get_autonomous_dashboard,
     get_autonomous_plan,
@@ -216,3 +223,59 @@ def scheduler_tick_endpoint(db: Session = Depends(get_db)) -> AutonomousSchedule
         executed_runs=len(rows),
         run_ids=[row.id for row in rows],
     )
+
+
+@router.post("/bootstrap", response_model=DailyOpsBootstrapResponse, status_code=status.HTTP_201_CREATED)
+def bootstrap_endpoint(
+    payload: DailyOpsBootstrapRequest,
+    db: Session = Depends(get_db),
+) -> DailyOpsBootstrapResponse:
+    try:
+        result = bootstrap_daily_operations(
+            db=db,
+            user_id=payload.user_id,
+            video_id=payload.video_id,
+            niche=payload.niche,
+            audience=payload.audience,
+            objective=payload.objective,
+            region=payload.region,
+        )
+    except ValueError as err:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(err)) from err
+    return DailyOpsBootstrapResponse.model_validate(result)
+
+
+@router.post("/daily-mode", response_model=AutonomousDailyModeResponse, status_code=status.HTTP_201_CREATED)
+def daily_mode_endpoint(
+    payload: AutonomousDailyModeRequest,
+    db: Session = Depends(get_db),
+) -> AutonomousDailyModeResponse:
+    try:
+        plan, run, ml_status = bootstrap_daily_mode(
+            db=db,
+            user_id=payload.user_id,
+            video_id=payload.video_id,
+            niche=payload.niche,
+            audience=payload.audience,
+            objective=payload.objective,
+            problem_angle=payload.problem_angle,
+            offer=payload.offer,
+            platform=payload.platform,
+            region=payload.region,
+            interval_minutes=payload.interval_minutes,
+            plan_name=payload.plan_name,
+            seed_text=payload.seed_text,
+            leads_count=payload.leads_count,
+            variants_count=payload.variants_count,
+            run_now=payload.run_now,
+        )
+    except ValueError as err:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(err)) from err
+
+    return AutonomousDailyModeResponse(
+        plan=_plan_to_payload(plan),
+        run=_run_to_payload(run) if run else None,
+        scheduler_enabled=settings.autonomous_scheduler_enabled,
+        ml_status=ml_status,
+    )
+

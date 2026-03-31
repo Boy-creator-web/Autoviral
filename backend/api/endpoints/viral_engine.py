@@ -1,3 +1,5 @@
+import json
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
@@ -8,6 +10,9 @@ from api.schemas import (
     ViralExperimentRead,
     ViralMetricIngestRequest,
     ViralMetricRead,
+    ViralModelTrainResponse,
+    ViralPredictRequest,
+    ViralPredictResponse,
     ViralRecommendationRead,
     ViralVariantListResponse,
     ViralVariantRead,
@@ -20,6 +25,7 @@ from services.viral_engine_service import (
     list_experiments,
     list_variants,
 )
+from services.viral_ml_service import predict_with_active_model, train_viral_model
 
 router = APIRouter()
 
@@ -122,3 +128,52 @@ def recommendation_endpoint(
     except ValueError as err:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(err)) from err
     return ViralRecommendationRead.model_validate(recommendation)
+
+
+@router.post("/model/train", response_model=ViralModelTrainResponse, status_code=status.HTTP_201_CREATED)
+def train_model_endpoint(
+    activate: bool = Query(default=True),
+    db: Session = Depends(get_db),
+) -> ViralModelTrainResponse:
+    try:
+        snapshot = train_viral_model(db=db, activate=activate)
+    except ValueError as err:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(err)) from err
+    return ViralModelTrainResponse(
+        snapshot_id=snapshot.id,
+        sample_count=snapshot.sample_count,
+        mae=snapshot.mae,
+        feature_count=len(json.loads(snapshot.feature_names_json or "[]")),
+        activated=snapshot.is_active,
+    )
+
+
+@router.post("/predict", response_model=ViralPredictResponse)
+def predict_endpoint(
+    payload: ViralPredictRequest,
+    db: Session = Depends(get_db),
+) -> ViralPredictResponse:
+    score, using_model, snapshot_id, features = predict_with_active_model(
+        db=db,
+        objective=payload.objective,
+        tone=payload.tone,
+        hook=payload.hook,
+        cta=payload.cta,
+        niche=payload.niche,
+        platform=payload.platform,
+        duration_target_sec=payload.duration_target_sec,
+    )
+    if not using_model:
+        # This endpoint is meant to reflect model inference state.
+        return ViralPredictResponse(
+            predicted_score=0.0,
+            using_model=False,
+            model_snapshot_id=None,
+            features=features,
+        )
+    return ViralPredictResponse(
+        predicted_score=round(score, 4),
+        using_model=True,
+        model_snapshot_id=snapshot_id,
+        features=features,
+    )

@@ -266,6 +266,38 @@ class ViralRecommendationRead(BaseModel):
     actions: list[str] = Field(default_factory=list)
 
 
+class ViralModelTrainResponse(BaseModel):
+    snapshot_id: int
+    sample_count: int
+    mae: float
+    feature_count: int
+    activated: bool
+
+
+class ViralPredictRequest(BaseModel):
+    objective: str = Field(min_length=1, max_length=200)
+    tone: str = Field(default="direct", min_length=3, max_length=80)
+    hook: str = Field(min_length=1, max_length=255)
+    cta: str = Field(min_length=1, max_length=255)
+    niche: str = Field(min_length=1, max_length=150)
+    platform: str = Field(default="tiktok", min_length=2, max_length=50)
+    duration_target_sec: int = Field(default=30, ge=5, le=180)
+
+
+class ViralPredictResponse(BaseModel):
+    predicted_score: float
+    using_model: bool
+    model_snapshot_id: int | None = None
+    features: dict[str, float] = Field(default_factory=dict)
+
+
+class ViralModelInfoRead(BaseModel):
+    snapshot_id: int
+    sample_count: int
+    mae: float
+    is_active: bool
+
+
 class AutonomousRunRequest(BaseModel):
     user_id: int
     video_id: int | None = None
@@ -378,3 +410,47 @@ class AutonomousPlanListResponse(BaseModel):
 class AutonomousSchedulerTickResponse(BaseModel):
     executed_runs: int
     run_ids: list[int] = Field(default_factory=list)
+
+
+class DailyOpsBootstrapRequest(BaseModel):
+    user_id: int
+    video_id: int | None = None
+    niche: str = Field(min_length=1, max_length=150)
+    audience: str = Field(min_length=1, max_length=200)
+    objective: str = Field(default="increase sales leads", min_length=1, max_length=200)
+    region: str = Field(default="ID", min_length=2, max_length=100)
+
+
+class DailyOpsBootstrapResponse(BaseModel):
+    quick_run_id: int
+    quick_run_status: str
+    created_plan_ids: list[int] = Field(default_factory=list)
+    existing_plan_count: int
+    total_plan_count: int
+    ml_training_status: str
+    ml_snapshot_id: int | None = None
+
+
+class AutonomousDailyModeRequest(BaseModel):
+    user_id: int
+    video_id: int | None = None
+    niche: str = Field(min_length=1, max_length=150)
+    audience: str = Field(min_length=1, max_length=200)
+    objective: str = Field(min_length=1, max_length=200)
+    problem_angle: str = Field(min_length=1, max_length=255)
+    offer: str | None = Field(default=None, max_length=255)
+    platform: str = Field(default="tiktok", min_length=2, max_length=50)
+    region: str = Field(default="ID", min_length=2, max_length=100)
+    interval_minutes: int = Field(default=1_440, ge=15, le=10_080)
+    plan_name: str = Field(default="Daily Autonomous Mode", min_length=3, max_length=120)
+    seed_text: str | None = Field(default=None, max_length=500)
+    leads_count: int = Field(default=8, ge=1, le=100)
+    variants_count: int = Field(default=3, ge=2, le=5)
+    run_now: bool = True
+
+
+class AutonomousDailyModeResponse(BaseModel):
+    plan: AutonomousPlanRead
+    run: AutonomousRunRead | None = None
+    scheduler_enabled: bool
+    ml_status: str

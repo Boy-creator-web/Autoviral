@@ -11,6 +11,7 @@ from models.video import Video
 from models.viral_experiment import ViralExperiment
 from models.viral_metric import ViralMetric
 from models.viral_variant import ViralVariant
+from services.viral_ml_service import predict_with_active_model
 
 
 @dataclass(frozen=True)
@@ -52,7 +53,7 @@ def _score_from_metrics(
     )
 
 
-def _predict_variant(
+def _predict_variant_heuristic(
     *,
     objective: str,
     tone: str,
@@ -104,6 +105,46 @@ def _predict_variant(
         share_rate=round(_clamp01(share_rate), 4),
         save_rate=round(_clamp01(save_rate), 4),
         score=score,
+    )
+
+
+def _predict_variant(
+    db: Session,
+    *,
+    objective: str,
+    tone: str,
+    hook: str,
+    cta: str,
+    niche: str,
+    platform: str,
+    duration_target_sec: int,
+    seed: int,
+) -> _Prediction:
+    heuristic = _predict_variant_heuristic(
+        objective=objective,
+        tone=tone,
+        hook=hook,
+        cta=cta,
+        seed=seed,
+    )
+    predicted_score, using_model, _, _ = predict_with_active_model(
+        db=db,
+        objective=objective,
+        tone=tone,
+        hook=hook,
+        cta=cta,
+        niche=niche,
+        platform=platform,
+        duration_target_sec=duration_target_sec,
+    )
+    if not using_model:
+        return heuristic
+    return _Prediction(
+        hook_rate=heuristic.hook_rate,
+        watch_rate=heuristic.watch_rate,
+        share_rate=heuristic.share_rate,
+        save_rate=heuristic.save_rate,
+        score=round(predicted_score, 4),
     )
 
 
@@ -193,11 +234,16 @@ def create_experiment(
         key = chr(ord("A") + idx)
         hook = hooks[idx % len(hooks)]
         cta = ctas[idx % len(ctas)]
+        duration_target_sec = 30 if platform.lower() in {"tiktok", "instagram"} else 45
         prediction = _predict_variant(
+            db,
             objective=objective,
             tone=tone,
             hook=hook,
             cta=cta,
+            niche=niche,
+            platform=platform,
+            duration_target_sec=duration_target_sec,
             seed=idx + 1,
         )
         variant = ViralVariant(
@@ -208,7 +254,7 @@ def create_experiment(
             cta=cta,
             caption=_build_caption(niche=niche, objective=objective, hook=hook),
             hashtags=_derive_hashtags(niche=niche, objective=objective, platform=platform),
-            duration_target_sec=30 if platform.lower() in {"tiktok", "instagram"} else 45,
+            duration_target_sec=duration_target_sec,
             predicted_hook_rate=prediction.hook_rate,
             predicted_watch_rate=prediction.watch_rate,
             predicted_share_rate=prediction.share_rate,

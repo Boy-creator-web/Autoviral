@@ -26,6 +26,7 @@ def init_db() -> None:
         user,
         video,
         viral_experiment,
+        viral_model_snapshot,
         viral_metric,
         viral_variant,
     )  # noqa: F401

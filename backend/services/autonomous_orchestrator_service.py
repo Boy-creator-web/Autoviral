@@ -15,6 +15,7 @@ from models.viral_variant import ViralVariant
 from services.sales_intel_service import create_outreach_draft, discover_leads, score_lead
 from services.scraper.engine import generate_and_store_insights
 from services.viral_engine_service import create_viral_experiment, get_experiment_recommendation
+from services.viral_ml_service import train_viral_model
 
 
 def _extract_trend_context(raw_data: str) -> str:
@@ -351,4 +352,106 @@ def run_due_autonomous_plans(db: Session, *, now: datetime | None = None) -> lis
             db.commit()
             db.refresh(plan)
     return runs
+
+
+def bootstrap_daily_operations(
+    db: Session,
+    *,
+    user_id: int,
+    video_id: int | None,
+    niche: str,
+    audience: str,
+    objective: str,
+    region: str,
+) -> dict:
+    """
+    Create a practical default 100% daily setup:
+    - one immediate autonomous cycle
+    - one recurring plan (4h)
+    - one recurring plan (24h)
+    - optional ML model training when enough historical metrics exist
+    """
+    quick_run = run_autonomous_cycle(
+        db=db,
+        user_id=user_id,
+        video_id=video_id,
+        seed_text=f"{niche} {objective}",
+        niche=niche,
+        audience=audience,
+        objective=objective,
+        problem_angle="retention tinggi tapi conversion belum stabil",
+        offer="free audit funnel",
+        tone="direct",
+        platform="tiktok",
+        region=region,
+        leads_count=5,
+        variants_count=3,
+    )
+
+    existing = list_autonomous_plans(db=db, user_id=user_id, active_only=False)
+    existing_names = {row.name for row in existing}
+    created_plans: list[AutonomousPlan] = []
+
+    default_plan_specs = [
+        {
+            "name": "Daily Always-On Cycle (4h)",
+            "interval_minutes": 240,
+            "seed_text": f"{niche} daily growth sprint",
+            "problem_angle": "engagement naik tapi leads belum konsisten",
+            "leads_count": 5,
+            "variants_count": 3,
+        },
+        {
+            "name": "Daily Deep Optimization (24h)",
+            "interval_minutes": 1440,
+            "seed_text": f"{niche} weekly conversion booster",
+            "problem_angle": "konten bagus tapi watch-through belum maksimal",
+            "leads_count": 8,
+            "variants_count": 4,
+        },
+    ]
+
+    for spec in default_plan_specs:
+        if spec["name"] in existing_names:
+            continue
+        created_plans.append(
+            create_autonomous_plan(
+                db=db,
+                user_id=user_id,
+                video_id=video_id,
+                name=spec["name"],
+                seed_text=spec["seed_text"],
+                niche=niche,
+                audience=audience,
+                objective=objective,
+                problem_angle=spec["problem_angle"],
+                offer="free audit funnel",
+                tone="direct",
+                platform="tiktok",
+                region=region,
+                leads_count=spec["leads_count"],
+                variants_count=spec["variants_count"],
+                interval_minutes=spec["interval_minutes"],
+                is_active=True,
+            )
+        )
+
+    trained_snapshot_id: int | None = None
+    training_status = "skipped"
+    try:
+        snapshot = train_viral_model(db=db, activate=True)
+        trained_snapshot_id = snapshot.id
+        training_status = "trained"
+    except ValueError:
+        training_status = "insufficient_samples"
+
+    return {
+        "quick_run_id": quick_run.id,
+        "quick_run_status": quick_run.status,
+        "created_plan_ids": [row.id for row in created_plans],
+        "existing_plan_count": len(existing),
+        "total_plan_count": len(existing) + len(created_plans),
+        "ml_training_status": training_status,
+        "ml_snapshot_id": trained_snapshot_id,
+    }
 
