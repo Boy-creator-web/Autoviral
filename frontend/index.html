@@ -3,110 +3,150 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Autoviral - AI Content Engine</title>
-    <meta name="description" content="Autoviral membantu Anda membangun konten viral dengan AI: synthetic human, video factory, dan scraper intelligence." />
+    <title>Autoviral - Platform Growth Otomatis</title>
+    <meta
+      name="description"
+      content="Autoviral: daftar harga, pendaftaran, pembayaran, tindakan campaign, laporan dan hasil dalam satu platform."
+    />
     <style>
       :root {
-        --bg: #0b1020;
-        --card: #111a33;
-        --text: #e6edff;
-        --muted: #aab8de;
+        --bg: #070b17;
+        --panel: #111a33;
+        --text: #ecf1ff;
+        --muted: #9fb0db;
         --primary: #4f7cff;
-        --accent: #36d6a0;
+        --green: #1cc98d;
       }
       * { box-sizing: border-box; }
       body {
         margin: 0;
         font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-        background: radial-gradient(1200px 600px at 20% -10%, #1a2d60 0%, var(--bg) 50%);
+        background: radial-gradient(1200px 600px at 20% -10%, #1a2d60 0%, var(--bg) 55%);
         color: var(--text);
       }
-      .wrap { max-width: 1080px; margin: 0 auto; padding: 24px; }
+      .wrap { max-width: 1120px; margin: 0 auto; padding: 24px; }
       .nav { display: flex; justify-content: space-between; align-items: center; }
-      .brand { font-weight: 700; letter-spacing: .3px; }
-      .pill { padding: 8px 12px; border: 1px solid #2b3d73; border-radius: 999px; color: var(--muted); }
-      .hero { padding: 72px 0 36px; }
-      h1 { font-size: clamp(32px, 6vw, 56px); line-height: 1.1; margin: 0 0 16px; }
-      p { color: var(--muted); font-size: 18px; line-height: 1.6; margin: 0 0 20px; }
-      .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+      .logo { font-weight: 700; letter-spacing: .4px; }
+      .badge { border: 1px solid #2f4683; padding: 7px 11px; border-radius: 999px; color: var(--muted); }
+      h1 { font-size: clamp(30px, 6vw, 54px); margin: 16px 0; line-height: 1.1; }
+      p { color: var(--muted); line-height: 1.7; }
+      .hero { padding: 48px 0 24px; }
+      .cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
       .btn {
-        display: inline-block;
         text-decoration: none;
         padding: 12px 18px;
         border-radius: 12px;
         font-weight: 600;
       }
       .btn-primary { background: var(--primary); color: #fff; }
-      .btn-ghost { border: 1px solid #3854a1; color: var(--text); }
+      .btn-secondary { border: 1px solid #3a53a0; color: var(--text); }
+      .section { margin-top: 34px; }
+      .section h2 { margin: 0 0 10px; font-size: 28px; }
       .grid {
-        margin-top: 40px;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 14px;
       }
       .card {
-        background: linear-gradient(180deg, #17254a, var(--card));
+        background: linear-gradient(180deg, #17254a, var(--panel));
         border: 1px solid #233566;
-        border-radius: 16px;
-        padding: 18px;
+        border-radius: 14px;
+        padding: 16px;
       }
-      .card h3 { margin: 0 0 10px; font-size: 18px; }
-      .status {
-        margin-top: 28px;
-        padding: 14px 16px;
+      .card h3 { margin: 0 0 8px; }
+      .price { font-size: 28px; font-weight: 700; margin: 10px 0; color: #d8e4ff; }
+      code { background: #0e1a39; border-radius: 6px; padding: 2px 6px; color: #c9d9ff; }
+      .steps li { margin-bottom: 8px; color: var(--muted); }
+      .ok {
+        margin-top: 22px;
+        padding: 12px 14px;
+        border: 1px solid #1f5e4a;
         border-radius: 12px;
-        border: 1px solid #214e3f;
         background: #0f2b22;
-        color: #b9ffe6;
+        color: #b8ffe6;
       }
-      footer { margin: 40px 0 18px; color: #8193c7; font-size: 14px; }
-      code { background: #0f1c3b; padding: 2px 6px; border-radius: 6px; }
+      footer { margin: 36px 0 18px; color: #7f91c8; font-size: 14px; }
+      a.inline { color: #9ec4ff; }
     </style>
   </head>
   <body>
     <div class="wrap">
       <div class="nav">
-        <div class="brand">Autoviral</div>
-        <div class="pill">synapsetech.my.id</div>
+        <div class="logo">Autoviral</div>
+        <div class="badge">synapsetech.my.id</div>
       </div>
 
       <section class="hero">
-        <h1>Grow Faster with <br />Autoviral AI Engine</h1>
+        <h1>Platform Lengkap untuk <br />Campaign Viral Otomatis</h1>
         <p>
-          Bangun pipeline konten viral end-to-end: AI Scraper Intelligence,
-          Synthetic Human Generator, dan Video Factory dalam satu platform.
+          Jalankan bisnis digital Anda end-to-end: mulai dari <strong>daftar harga</strong>,
+          <strong>pendaftaran</strong>, <strong>pembayaran</strong>, <strong>tindakan campaign</strong>,
+          hingga <strong>laporan & hasil</strong> dalam satu API platform.
         </p>
         <div class="cta">
-          <a class="btn btn-primary" href="/api/v1/health">Cek API Health</a>
-          <a class="btn btn-ghost" href="/docs">Buka API Docs</a>
+          <a class="btn btn-primary" href="/docs">Buka API Docs</a>
+          <a class="btn btn-secondary" href="/api/v1/health">Cek Health</a>
         </div>
       </section>
 
-      <section class="grid">
-        <article class="card">
-          <h3>Scraper Engine</h3>
-          <p>Deteksi trend, sinyal intent, dan insight kompetitor secara cepat.</p>
-        </article>
-        <article class="card">
-          <h3>Synthetic Human</h3>
-          <p>Buat karakter digital konsisten untuk branding dan kampanye.</p>
-        </article>
-        <article class="card">
-          <h3>Video Factory</h3>
-          <p>Generate video campaign dan otomasi distribusi konten kreatif.</p>
-        </article>
-        <article class="card">
-          <h3>Fast API</h3>
-          <p>Integrasi endpoint sederhana untuk kebutuhan internal dan eksternal.</p>
-        </article>
+      <section class="section">
+        <h2>Daftar Harga</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Starter</h3>
+            <div class="price">Rp299.000 / bulan</div>
+            <p>20 video, 5 campaign, 50 scraper insight.</p>
+          </article>
+          <article class="card">
+            <h3>Growth</h3>
+            <div class="price">Rp799.000 / bulan</div>
+            <p>80 video, 20 campaign, 250 scraper insight.</p>
+          </article>
+          <article class="card">
+            <h3>Scale</h3>
+            <div class="price">Rp1.999.000 / bulan</div>
+            <p>300 video, 80 campaign, 1000 scraper insight.</p>
+          </article>
+        </div>
       </section>
 
-      <div class="status">
-        Deployment status: <strong>Online</strong> · API route tersedia di <code>/api/v1</code>
+      <section class="section">
+        <h2>Alur Operasional</h2>
+        <ol class="steps">
+          <li><strong>Pendaftaran user</strong> via <code>POST /api/v1/users</code></li>
+          <li><strong>Pilih plan</strong> via <code>GET /api/v1/pricing</code> & <code>POST /api/v1/subscriptions</code></li>
+          <li><strong>Pembayaran</strong> via <code>POST /api/v1/payments</code></li>
+          <li><strong>Tindakan campaign</strong> via <code>POST /api/v1/actions</code></li>
+          <li><strong>Generate hasil</strong> via <code>POST /api/v1/results</code></li>
+          <li><strong>Laporan periodik</strong> via <code>POST /api/v1/reports</code></li>
+        </ol>
+      </section>
+
+      <section class="section">
+        <h2>Fitur Inti</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Scraper Intelligence</h3>
+            <p>Kelola insight trend dan kompetitor lewat endpoint <code>/api/v1/scraper</code>.</p>
+          </article>
+          <article class="card">
+            <h3>Synthetic Human</h3>
+            <p>Bangun aset karakter digital melalui <code>/api/v1/synthetic-humans</code> dan <code>/api/v1/human</code>.</p>
+          </article>
+          <article class="card">
+            <h3>Video Factory</h3>
+            <p>Kelola pipeline video di <code>/api/v1/videos</code> dan <code>/api/v1/video</code>.</p>
+          </article>
+        </div>
+      </section>
+
+      <div class="ok">
+        Status: <strong>Ready</strong> · Integrasi website + API aktif pada domain ini.
       </div>
 
       <footer>
-        © 2026 SynapseTech · Autoviral Platform
+        © 2026 SynapseTech · Autoviral Platform ·
+        <a class="inline" href="/openapi.json">OpenAPI Schema</a>
       </footer>
     </div>
   </body>

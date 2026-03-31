@@ -1,4 +1,4 @@
-"""Database setup placeholders for simplified project."""
+"""Database setup and initialization."""
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
@@ -16,3 +16,21 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def init_db() -> None:
+    """Create database tables for all registered models."""
+    from models import (  # noqa: F401
+        campaign_action,
+        campaign_report,
+        campaign_result,
+        payment,
+        pricing_plan,
+        scraper_data,
+        subscription,
+        synthetic_human,
+        user,
+        video,
+    )
+
+    Base.metadata.create_all(bind=engine)

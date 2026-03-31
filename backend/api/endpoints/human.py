@@ -1,15 +1,10 @@
-"""Human endpoint."""
+"""Alias endpoint to synthetic humans for compatibility."""
 
-from fastapi import APIRouter
+from api.endpoints.synthetic_humans import create_synthetic_human, list_synthetic_humans
+from api.endpoints.synthetic_humans import router as router
 
-router = APIRouter()
-
-
-@router.get("/")
-def list_humans() -> dict[str, str]:
-    return {"message": "ok"}
-
-
-@router.post("/")
-def create_human() -> dict[str, str]:
-    return {"message": "ok"}
+__all__ = [
+    "router",
+    "list_synthetic_humans",
+    "create_synthetic_human",
+]

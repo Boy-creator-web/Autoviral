@@ -6,7 +6,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     project_name: str = "Autoviral Backend"
     api_v1_prefix: str = "/api/v1"
-    database_url: str = "postgresql+psycopg2://autoviral:autoviral@postgres:5432/autoviral"
+    # Local default uses SQLite for easy bootstrapping.
+    # Production can override via DATABASE_URL (docker-compose uses PostgreSQL).
+    database_url: str = "sqlite:///./autoviral.db"
 
     model_config = SettingsConfigDict(
         env_file=".env",

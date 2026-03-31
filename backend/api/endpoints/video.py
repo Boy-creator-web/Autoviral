@@ -1,15 +1,5 @@
-"""Video endpoint."""
+"""Video factory endpoint aliases."""
 
-from fastapi import APIRouter
+from api.endpoints.videos import create_video, list_videos, router
 
-router = APIRouter()
-
-
-@router.get("/")
-def list_video() -> dict[str, str]:
-    return {"message": "ok"}
-
-
-@router.post("/")
-def create_video_endpoint() -> dict[str, str]:
-    return {"message": "ok"}
+__all__ = ["router", "list_videos", "create_video"]
