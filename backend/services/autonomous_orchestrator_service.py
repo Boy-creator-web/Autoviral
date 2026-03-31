@@ -455,3 +455,103 @@ def bootstrap_daily_operations(
         "ml_snapshot_id": trained_snapshot_id,
     }
 
+
+def bootstrap_daily_mode(
+    db: Session,
+    *,
+    user_id: int,
+    video_id: int | None,
+    niche: str,
+    audience: str,
+    objective: str,
+    problem_angle: str,
+    offer: str | None,
+    platform: str,
+    region: str,
+    interval_minutes: int,
+    plan_name: str,
+    seed_text: str | None,
+    leads_count: int,
+    variants_count: int,
+    run_now: bool,
+) -> tuple[AutonomousPlan, AutonomousRun | None, str]:
+    if db.get(User, user_id) is None:
+        raise ValueError("User not found")
+    if video_id is not None and db.get(Video, video_id) is None:
+        raise ValueError("Video not found")
+
+    plan_seed = seed_text or f"{niche} {objective}"
+    existing_plan = db.scalar(
+        select(AutonomousPlan)
+        .where(AutonomousPlan.user_id == user_id)
+        .where(AutonomousPlan.name == plan_name)
+        .order_by(AutonomousPlan.id.desc())
+    )
+    if existing_plan is None:
+        plan = create_autonomous_plan(
+            db=db,
+            user_id=user_id,
+            video_id=video_id,
+            name=plan_name,
+            seed_text=plan_seed,
+            niche=niche,
+            audience=audience,
+            objective=objective,
+            problem_angle=problem_angle,
+            offer=offer,
+            tone="direct",
+            platform=platform,
+            region=region,
+            leads_count=leads_count,
+            variants_count=variants_count,
+            interval_minutes=interval_minutes,
+            is_active=True,
+        )
+    else:
+        plan = existing_plan
+        plan.video_id = video_id
+        plan.seed_text = plan_seed
+        plan.niche = niche
+        plan.audience = audience
+        plan.objective = objective
+        plan.problem_angle = problem_angle
+        plan.offer = offer
+        plan.platform = platform
+        plan.region = region
+        plan.leads_count = leads_count
+        plan.variants_count = variants_count
+        plan.interval_minutes = interval_minutes
+        plan.is_active = True
+        if plan.next_run_at is None:
+            plan.next_run_at = datetime.now(UTC)
+        db.commit()
+        db.refresh(plan)
+
+    run: AutonomousRun | None = None
+    if run_now:
+        run = run_autonomous_cycle(
+            db=db,
+            user_id=user_id,
+            video_id=video_id,
+            seed_text=plan_seed,
+            niche=niche,
+            audience=audience,
+            objective=objective,
+            problem_angle=problem_angle,
+            offer=offer,
+            tone="direct",
+            platform=platform,
+            region=region,
+            leads_count=leads_count,
+            variants_count=variants_count,
+        )
+
+    ml_status = "insufficient_samples"
+    try:
+        train_viral_model(db=db, activate=True)
+        ml_status = "trained"
+    except ValueError:
+        ml_status = "insufficient_samples"
+
+    return plan, run, ml_status
+
