@@ -13,6 +13,8 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
     full_name: Mapped[str] = mapped_column(String(255), nullable=False)
     phone: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+    role: Mapped[str] = mapped_column(String(50), nullable=False, default="user")
     status: Mapped[str] = mapped_column(String(50), nullable=False, default="active")
 
     subscriptions = relationship("Subscription", back_populates="user", cascade="all, delete-orphan")

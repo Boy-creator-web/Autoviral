@@ -3,6 +3,11 @@ uvicorn[standard]
 sqlalchemy
 psycopg2-binary
 pydantic-settings
+email-validator
 python-dotenv
 redis
 celery
+python-jose[cryptography]
+passlib[bcrypt]
+httpx
+python-multipart

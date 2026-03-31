@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from core.database import get_db
+from core.security import get_current_user
 from models.campaign_action import CampaignAction
 from models.user import User
 from schemas.operations import CampaignActionCreate, CampaignActionRead
@@ -14,8 +15,13 @@ router = APIRouter()
 
 
 @router.get("/", response_model=list[CampaignActionRead])
-def list_actions(db: Session = Depends(get_db)) -> list[CampaignActionRead]:
+def list_actions(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> list[CampaignActionRead]:
     rows = list(db.scalars(select(CampaignAction).order_by(CampaignAction.id.desc())).all())
+    if current_user.role != "admin":
+        rows = [row for row in rows if row.user_id == current_user.id]
     return [
         CampaignActionRead(
             id=row.id,
@@ -30,7 +36,14 @@ def list_actions(db: Session = Depends(get_db)) -> list[CampaignActionRead]:
 
 
 @router.post("/", response_model=CampaignActionRead, status_code=status.HTTP_201_CREATED)
-def create_action(payload: CampaignActionCreate, db: Session = Depends(get_db)) -> CampaignActionRead:
+def create_action(
+    payload: CampaignActionCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> CampaignActionRead:
+    if current_user.role != "admin" and current_user.id != payload.user_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed for this user")
+
     user = db.get(User, payload.user_id)
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")

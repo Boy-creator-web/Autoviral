@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from core.database import get_db
+from core.security import get_current_user
 from models.campaign_report import CampaignReport
 from models.user import User
 from schemas.operations import CampaignReportCreate, CampaignReportRead
@@ -14,8 +15,13 @@ router = APIRouter()
 
 
 @router.get("/", response_model=list[CampaignReportRead])
-def list_reports(db: Session = Depends(get_db)) -> list[CampaignReportRead]:
+def list_reports(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> list[CampaignReportRead]:
     rows = list(db.scalars(select(CampaignReport).order_by(CampaignReport.id.desc())).all())
+    if current_user.role != "admin":
+        rows = [row for row in rows if row.user_id == current_user.id]
     return [
         CampaignReportRead(
             id=row.id,
@@ -29,7 +35,14 @@ def list_reports(db: Session = Depends(get_db)) -> list[CampaignReportRead]:
 
 
 @router.post("/", response_model=CampaignReportRead, status_code=status.HTTP_201_CREATED)
-def create_report(payload: CampaignReportCreate, db: Session = Depends(get_db)) -> CampaignReportRead:
+def create_report(
+    payload: CampaignReportCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> CampaignReportRead:
+    if current_user.role != "admin" and current_user.id != payload.user_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed for this user")
+
     user = db.get(User, payload.user_id)
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")

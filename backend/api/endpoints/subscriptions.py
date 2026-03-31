@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from core.database import get_db
+from core.security import get_current_user
 from models.pricing_plan import PricingPlan
 from models.subscription import Subscription
 from models.user import User
@@ -33,7 +34,14 @@ def list_subscriptions(db: Session = Depends(get_db)) -> list[SubscriptionRead]:
 
 
 @router.post("/", response_model=SubscriptionRead, status_code=status.HTTP_201_CREATED)
-def create_subscription(payload: SubscriptionCreate, db: Session = Depends(get_db)) -> SubscriptionRead:
+def create_subscription(
+    payload: SubscriptionCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> SubscriptionRead:
+    if current_user.role != "admin" and current_user.id != payload.user_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed for this user")
+
     user = db.get(User, payload.user_id)
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")

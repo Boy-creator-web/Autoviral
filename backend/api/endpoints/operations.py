@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends
 
 from core.database import get_db
+from core.security import get_admin_user
 from models.campaign_action import CampaignAction
 from models.campaign_report import CampaignReport
 from models.campaign_result import CampaignResult
@@ -16,7 +17,7 @@ from models.user import User
 router = APIRouter()
 
 
-@router.get("/summary")
+@router.get("/summary", dependencies=[Depends(get_admin_user)])
 def get_summary(db: Session = Depends(get_db)) -> dict[str, object]:
     users = db.scalar(select(func.count(User.id))) or 0
     subscriptions = db.scalar(select(func.count(Subscription.id))) or 0

@@ -9,6 +9,11 @@ class Settings(BaseSettings):
     # Local default uses SQLite for easy bootstrapping.
     # Production can override via DATABASE_URL (docker-compose uses PostgreSQL).
     database_url: str = "sqlite:///./autoviral.db"
+    secret_key: str = "change-me-autoviral-secret-key"
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 60
+    payment_webhook_secret: str = "change-me-webhook-secret"
+    allowed_origins: str = "*"
 
     model_config = SettingsConfigDict(
         env_file=".env",

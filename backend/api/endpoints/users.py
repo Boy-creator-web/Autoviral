@@ -6,13 +6,14 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from core.database import get_db
+from core.security import get_admin_user, hash_password
 from models.user import User
 from schemas.user import UserCreate, UserRead
 
 router = APIRouter()
 
 
-@router.get("/", response_model=list[UserRead])
+@router.get("/", response_model=list[UserRead], dependencies=[Depends(get_admin_user)])
 def list_users(db: Session = Depends(get_db)) -> list[UserRead]:
     rows = list(db.scalars(select(User).order_by(User.id.desc())).all())
     return [
@@ -33,11 +34,14 @@ def create_user(payload: UserCreate, db: Session = Depends(get_db)) -> UserRead:
     if existing is not None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
 
+    role = "admin" if db.query(User).count() == 0 else "user"
     user = User(
         email=payload.email,
         full_name=payload.full_name,
         phone=payload.phone,
         status="active",
+        role=role,
+        password_hash=hash_password(payload.password),
     )
     db.add(user)
     db.commit()
@@ -48,4 +52,5 @@ def create_user(payload: UserCreate, db: Session = Depends(get_db)) -> UserRead:
         full_name=user.full_name,
         phone=user.phone,
         status=user.status,
+        role=user.role,
     )
