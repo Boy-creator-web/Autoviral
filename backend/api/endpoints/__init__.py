@@ -1,5 +1,6 @@
 from . import (
     autonomous,
+    customer_intake,
     health,
     human,
     scraper,
@@ -14,6 +15,7 @@ from . import (
 
 __all__ = [
     "autonomous",
+    "customer_intake",
     "health",
     "users",
     "synthetic_humans",

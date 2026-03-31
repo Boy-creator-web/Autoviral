@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SynapseTech | Autonomous Viral & Sales Engine</title>
+    <meta
+      name="description"
+      content="SynapseTech membantu bisnis menaikkan leads dan penjualan dengan engine konten viral + sales intelligence yang berjalan otomatis."
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="container">
+        <p class="eyebrow">synapsetech.my.id</p>
+        <h1>Naikkan Leads & Penjualan dengan Engine Konten Otonom</h1>
+        <p class="subtitle">
+          Bukan cuma viralitas. Sistem kami menjalankan siklus lengkap: insight tren, eksperimen
+          konten, scoring leads, sampai draft outreach otomatis.
+        </p>
+        <a class="btn btn-primary" href="#contact-form">Jadwalkan Setup Gratis</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="section">
+        <div class="container grid-3">
+          <article class="card">
+            <h3>Pain Point: Konten ramai, tapi sales sepi</h3>
+            <p>
+              Kami hubungkan konten dengan Sales Intelligence agar leads tidak berhenti di vanity
+              metrics.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Pain Point: Tim kecil, eksekusi lambat</h3>
+            <p>
+              Engine otonom kami bisa jalan tanpa tim besar, dengan mode operasi harian dan scheduler.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Pain Point: Sulit menentukan konten terbaik</h3>
+            <p>
+              Sistem menjalankan eksperimen varian konten dan memilih pemenang berbasis data performa.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section-dark">
+        <div class="container">
+          <h2>Yang Anda Dapatkan</h2>
+          <ul class="feature-list">
+            <li>Autonomous Content & Sales Cycle (harian/mingguan)</li>
+            <li>ML-based Viral Scoring (bukan heuristic saja)</li>
+            <li>Lead Discovery + Lead Qualification + Outreach Draft</li>
+            <li>Owner Dashboard untuk kontrol dan monitoring</li>
+            <li>Siap integrasi payment gateway & customer portal</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="contact-form">
+        <div class="container">
+          <h2>Request Demo / Konsultasi</h2>
+          <p class="subtitle">
+            Isi data berikut. Tim SynapseTech akan mengonfigurasi mode operasi yang paling sesuai dengan
+            target bisnis Anda.
+          </p>
+
+          <form id="intakeForm" class="form">
+            <div class="form-grid">
+              <label>
+                Nama Lengkap
+                <input name="full_name" required maxlength="120" />
+              </label>
+              <label>
+                Email Bisnis
+                <input name="email" type="email" required maxlength="255" />
+              </label>
+              <label>
+                WhatsApp
+                <input name="phone" required maxlength="32" />
+              </label>
+              <label>
+                Nama Bisnis
+                <input name="business_name" required maxlength="180" />
+              </label>
+              <label>
+                Niche
+                <input name="niche" required maxlength="150" />
+              </label>
+              <label>
+                Omset Target Bulanan (IDR)
+                <input name="monthly_revenue_target" type="number" min="0" step="100000" />
+              </label>
+              <label>
+                Paket yang diminati
+                <select name="preferred_plan">
+                  <option value="starter">Starter</option>
+                  <option value="growth">Growth</option>
+                  <option value="pro">Pro</option>
+                  <option value="enterprise">Enterprise</option>
+                </select>
+              </label>
+            </div>
+
+            <label>
+              Pain Point Utama
+              <textarea name="pain_point" required maxlength="2000"></textarea>
+            </label>
+
+            <label>
+              Outcome yang diharapkan 90 hari
+              <textarea name="desired_outcome" required maxlength="2000"></textarea>
+            </label>
+
+            <button type="submit" class="btn btn-primary">Kirim Permintaan</button>
+            <p id="formStatus" class="form-status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>© <span id="year"></span> SynapseTech. Autonomous growth systems for serious businesses.</p>
+      </div>
+    </footer>
+
+    <script src="/script.js"></script>
+  </body>
+</html>

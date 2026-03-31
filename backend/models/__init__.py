@@ -5,6 +5,7 @@ from models.user import User
 from models.video import Video
 from models.autonomous_run import AutonomousRun
 from models.autonomous_plan import AutonomousPlan
+from models.customer_intake import CustomerIntake
 from models.viral_experiment import ViralExperiment
 from models.viral_metric import ViralMetric
 from models.viral_model_snapshot import ViralModelSnapshot
@@ -18,6 +19,7 @@ __all__ = [
     "SalesLead",
     "AutonomousRun",
     "AutonomousPlan",
+    "CustomerIntake",
     "ViralExperiment",
     "ViralVariant",
     "ViralMetric",

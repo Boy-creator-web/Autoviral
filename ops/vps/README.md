@@ -146,3 +146,29 @@ Verifikasi:
 chmod +x /root/autoviral/ops/vps/hardening_phase2_verify.sh
 /root/autoviral/ops/vps/hardening_phase2_verify.sh
 ```
+
+## 10) Deploy website `synapsetech.my.id`
+
+Untuk deploy website landing + intake form yang terhubung ke API backend:
+
+```bash
+chmod +x /root/autoviral/ops/vps/deploy_synapsetech_site.sh
+/root/autoviral/ops/vps/deploy_synapsetech_site.sh
+```
+
+Script ini akan:
+- copy file static website dari `/root/autoviral/website/*` ke `/var/www/synapsetech-site`
+- pasang konfigurasi Nginx domain `synapsetech.my.id`
+- proxy `/api/*` ke backend `127.0.0.1:8000`
+- generate SSL Let’s Encrypt (domain + www) dan force HTTPS
+
+Opsional env:
+
+```bash
+DOMAIN=synapsetech.my.id \
+WWW_DOMAIN=www.synapsetech.my.id \
+LETSENCRYPT_EMAIL=admin@synapsetech.my.id \
+/root/autoviral/ops/vps/deploy_synapsetech_site.sh
+```
+
+Pastikan DNS `A` record domain sudah mengarah ke IP VPS sebelum menjalankan script.

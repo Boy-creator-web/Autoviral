@@ -152,6 +152,42 @@ class SalesPipelineListResponse(BaseModel):
     leads: list[SalesLeadRead]
 
 
+class CustomerIntakeCreate(BaseModel):
+    full_name: str = Field(min_length=1, max_length=120)
+    email: EmailStr
+    phone: str = Field(min_length=5, max_length=32)
+    business_name: str = Field(min_length=1, max_length=180)
+    niche: str = Field(min_length=1, max_length=150)
+    monthly_revenue_target: float = Field(default=0.0, ge=0)
+    preferred_plan: str = Field(default="starter", min_length=2, max_length=50)
+    pain_point: str = Field(min_length=1, max_length=2000)
+    desired_outcome: str = Field(min_length=1, max_length=2000)
+    source: str = Field(default="website", min_length=2, max_length=120)
+
+
+class CustomerIntakeRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    full_name: str
+    email: EmailStr
+    phone: str
+    business_name: str
+    niche: str
+    monthly_revenue_target: float
+    preferred_plan: str
+    pain_point: str
+    desired_outcome: str
+    source: str
+    status: str
+    created_at: datetime
+
+
+class CustomerIntakeListResponse(BaseModel):
+    count: int
+    items: list[CustomerIntakeRead]
+
+
 class ViralExperimentCreateRequest(BaseModel):
     user_id: int
     video_id: int | None = None

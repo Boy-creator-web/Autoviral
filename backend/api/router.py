@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from api.endpoints import (
     autonomous,
+    customer_intake,
     health,
     sales_intel,
     scraper_data,
@@ -23,6 +24,7 @@ api_router.include_router(
 api_router.include_router(videos.router, prefix="/videos", tags=["videos"])
 api_router.include_router(scraper_data.router, prefix="/scraper-data", tags=["scraper-data"])
 api_router.include_router(scraper_insights.router, prefix="/scraper", tags=["scraper"])
+api_router.include_router(customer_intake.router, prefix="/customer-intake", tags=["customer-intake"])
 api_router.include_router(sales_intel.router, prefix="/sales", tags=["sales-intel"])
 api_router.include_router(viral_engine.router, prefix="/viral-engine", tags=["viral-engine"])
 api_router.include_router(autonomous.router, prefix="/autonomous", tags=["autonomous"])

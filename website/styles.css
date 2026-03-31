@@ -1,0 +1,157 @@
+:root {
+  --bg: #090c10;
+  --bg-soft: #121821;
+  --text: #edf2f7;
+  --muted: #b8c2cc;
+  --primary: #4f8cff;
+  --primary-dark: #2f6ee6;
+  --card: #111826;
+  --border: #263246;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.container {
+  width: min(1080px, 92vw);
+  margin: 0 auto;
+}
+
+.hero {
+  padding: 84px 0 64px;
+  background: radial-gradient(circle at 20% 20%, #1a305c, transparent 45%),
+    radial-gradient(circle at 80% 0%, #1b4f3d, transparent 40%), var(--bg);
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9eb6d7;
+  font-size: 0.8rem;
+}
+
+h1 {
+  font-size: clamp(2rem, 4.5vw, 3.3rem);
+  line-height: 1.08;
+  max-width: 16ch;
+  margin: 12px 0;
+}
+
+h2 {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  margin-top: 0;
+}
+
+.subtitle {
+  color: var(--muted);
+  max-width: 70ch;
+}
+
+.section {
+  padding: 64px 0;
+}
+
+.section-dark {
+  background: var(--bg-soft);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.feature-list {
+  margin: 18px 0 0;
+  padding-left: 18px;
+}
+
+.feature-list li {
+  margin: 8px 0;
+}
+
+.btn {
+  display: inline-block;
+  margin-top: 14px;
+  border-radius: 10px;
+  border: none;
+  padding: 12px 18px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.form {
+  margin-top: 22px;
+  display: grid;
+  gap: 14px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+label {
+  display: grid;
+  gap: 7px;
+  font-size: 0.95rem;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  background: #0d1420;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-status {
+  min-height: 22px;
+  margin: 0;
+  font-size: 0.95rem;
+  color: #9ad3ff;
+}
+
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 22px 0;
+  color: var(--muted);
+}

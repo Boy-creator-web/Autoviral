@@ -20,6 +20,7 @@ def init_db() -> None:
     from models import (
         autonomous_plan,
         autonomous_run,
+        customer_intake,
         scraper_data,
         sales_lead,
         synthetic_human,

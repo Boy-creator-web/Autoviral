@@ -209,3 +209,29 @@ Ringkas:
   - `/root/autoviral/ops/vps/healthcheck_stack.sh`
 - Recovery dari backup terbaru:
   - `/root/autoviral/ops/vps/recover_autoviral.sh`
+
+## Website SynapseTech (Landing + Customer Intake)
+
+Website statis untuk domain `synapsetech.my.id` tersedia di folder:
+
+```bash
+website/
+```
+
+Konten website difokuskan pada pain point pelanggan:
+- konten ramai tapi sales rendah
+- tim kecil, eksekusi lambat
+- sulit menentukan varian konten terbaik
+
+Form "Request Demo / Konsultasi" akan mengirim data ke endpoint:
+
+```bash
+POST /api/v1/customer-intake/
+```
+
+Endpoint terkait:
+- `POST /api/v1/customer-intake/`
+- `GET /api/v1/customer-intake/`
+
+Deploy domain + SSL di VPS:
+- gunakan `ops/vps/deploy_synapsetech_site.sh`
