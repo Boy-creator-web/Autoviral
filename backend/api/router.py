@@ -6,6 +6,7 @@ from api.endpoints.actions import router as actions_router
 from api.endpoints.auth import router as auth_router
 from api.endpoints.health import router as health_router
 from api.endpoints.human import router as human_router
+from api.endpoints.monitor import router as monitor_router
 from api.endpoints.operations import router as operations_router
 from api.endpoints.payments import router as payments_router
 from api.endpoints.pricing import router as pricing_router
@@ -38,3 +39,4 @@ api_router.include_router(actions_router, prefix="/actions", tags=["actions"])
 api_router.include_router(results_router, prefix="/results", tags=["results"])
 api_router.include_router(reports_router, prefix="/reports", tags=["reports"])
 api_router.include_router(operations_router, prefix="/operations", tags=["operations"])
+api_router.include_router(monitor_router, prefix="/monitor", tags=["monitor"])

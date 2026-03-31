@@ -81,3 +81,23 @@ Restore:
 ```bash
 ./backup/restore_postgres.sh /root/autoviral/backups/autoviral_YYYYmmdd_HHMMSS.sql.gz
 ```
+
+## 9) Monitor endpoint (scheduled health + backup)
+
+Endpoint admin-only:
+
+```bash
+curl -H "Authorization: Bearer <TOKEN_ADMIN>" \
+  https://synapsetech.my.id/api/v1/monitor/status
+```
+
+Respons memuat:
+- status database
+- status redis
+- status backup terakhir (stale/tidak)
+
+Contoh cron check (setiap 5 menit):
+
+```cron
+*/5 * * * * /usr/bin/curl -fsS -H "Authorization: Bearer <TOKEN_ADMIN>" https://synapsetech.my.id/api/v1/monitor/status > /dev/null || echo "monitor failed"
+```

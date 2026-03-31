@@ -14,6 +14,12 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 60
     payment_webhook_secret: str = "change-me-webhook-secret"
     allowed_origins: str = "*"
+    redis_url: str = "redis://redis:6379/0"
+    rate_limit_requests: int = 120
+    rate_limit_window_seconds: int = 60
+    monitor_interval_seconds: int = 300
+    backup_dir: str = "/root/autoviral/backups"
+    backup_stale_minutes: int = 1440
 
     model_config = SettingsConfigDict(
         env_file=".env",

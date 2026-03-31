@@ -5,7 +5,9 @@ from sqlalchemy.orm import Session
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
+from core.audit import audit_log
 from core.database import get_db
+from core.rate_limit import enforce_user_rate_limit
 from core.security import get_current_user
 from models.campaign_action import CampaignAction
 from models.user import User
@@ -41,6 +43,7 @@ def create_action(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> CampaignActionRead:
+    enforce_user_rate_limit(current_user.id)
     if current_user.role != "admin" and current_user.id != payload.user_id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed for this user")
 
@@ -58,6 +61,12 @@ def create_action(
     db.add(row)
     db.commit()
     db.refresh(row)
+    audit_log(
+        "campaign_action_created",
+        actor=f"user:{current_user.id}",
+        target=f"action:{row.id}",
+        metadata={"action_type": row.action_type, "owner_user_id": row.user_id},
+    )
     return CampaignActionRead(
         id=row.id,
         user_id=row.user_id,

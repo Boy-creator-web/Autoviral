@@ -5,9 +5,11 @@ from datetime import date, timedelta
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 
+from core.audit import audit_log
 from core.database import get_db
+from core.rate_limit import enforce_ip_rate_limit, enforce_user_rate_limit
 from core.security import get_current_user
 from models.pricing_plan import PricingPlan
 from models.subscription import Subscription
@@ -36,9 +38,12 @@ def list_subscriptions(db: Session = Depends(get_db)) -> list[SubscriptionRead]:
 @router.post("/", response_model=SubscriptionRead, status_code=status.HTTP_201_CREATED)
 def create_subscription(
     payload: SubscriptionCreate,
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> SubscriptionRead:
+    enforce_ip_rate_limit(request)
+    enforce_user_rate_limit(current_user.id)
     if current_user.role != "admin" and current_user.id != payload.user_id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed for this user")
 
@@ -63,6 +68,12 @@ def create_subscription(
     db.add(row)
     db.commit()
     db.refresh(row)
+    audit_log(
+        "subscription_created",
+        actor=f"user:{current_user.id}",
+        target=f"subscription:{row.id}",
+        metadata={"plan_id": row.plan_id, "months": payload.months},
+    )
     return SubscriptionRead(
         id=row.id,
         user_id=row.user_id,
