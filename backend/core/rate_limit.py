@@ -3,13 +3,20 @@
 from __future__ import annotations
 
 import hashlib
+import time
 from dataclasses import dataclass
+from threading import Lock
 
 from fastapi import HTTPException, Request, Response, status
 from redis import Redis
 from redis.exceptions import RedisError
 
 from core.config import settings
+
+_LOCAL_LOCK = Lock()
+_LOCAL_RATE_STATE: dict[str, tuple[int, float]] = {}
+_LOCAL_LOGIN_FAIL_STATE: dict[str, tuple[int, float]] = {}
+_LOCAL_LOGIN_LOCK_STATE: dict[str, float] = {}
 
 
 @dataclass
@@ -52,8 +59,16 @@ def _hit(scope: str, identifier: str, *, limit: int, window: int) -> tuple[int, 
         ttl = client.ttl(key)
         return int(hits), int(ttl if ttl >= 0 else window)
     except RedisError:
-        # Fail-open to prevent accidental outage if Redis is down.
-        return 1, window
+        # Fallback to local in-process limiter if Redis is down.
+        now = time.time()
+        with _LOCAL_LOCK:
+            hits, expires_at = _LOCAL_RATE_STATE.get(key, (0, now + window))
+            if now >= expires_at:
+                hits, expires_at = 0, now + window
+            hits += 1
+            _LOCAL_RATE_STATE[key] = (hits, expires_at)
+            ttl = max(0, int(expires_at - now))
+            return hits, ttl
 
 
 def _build_result(scope: str, *, hits: int, ttl: int, limit: int) -> RateLimitResult:
@@ -120,7 +135,17 @@ def check_login_lock(scope: str, identifier: str) -> int:
         ttl = int(client.ttl(_lock_key(scope, identifier)))
         return ttl if ttl > 0 else 0
     except RedisError:
-        return 0
+        now = time.time()
+        key = _lock_key(scope, identifier)
+        with _LOCAL_LOCK:
+            expires_at = _LOCAL_LOGIN_LOCK_STATE.get(key)
+            if expires_at is None:
+                return 0
+            ttl = int(expires_at - now)
+            if ttl <= 0:
+                _LOCAL_LOGIN_LOCK_STATE.pop(key, None)
+                return 0
+            return ttl
 
 
 def register_login_failure(scope: str, identifier: str) -> tuple[bool, int]:
@@ -143,6 +168,23 @@ def register_login_failure(scope: str, identifier: str) -> tuple[bool, int]:
             return True, settings.login_lock_seconds
         return False, 0
     except RedisError:
+        now = time.time()
+        fail_key = _fail_key(scope, identifier)
+        lock_key = _lock_key(scope, identifier)
+        with _LOCAL_LOCK:
+            failures, fail_expires = _LOCAL_LOGIN_FAIL_STATE.get(
+                fail_key, (0, now + settings.login_fail_window_seconds)
+            )
+            if now >= fail_expires:
+                failures, fail_expires = 0, now + settings.login_fail_window_seconds
+            failures += 1
+            _LOCAL_LOGIN_FAIL_STATE[fail_key] = (failures, fail_expires)
+
+            if failures >= settings.login_fail_max_attempts:
+                lock_expires = now + settings.login_lock_seconds
+                _LOCAL_LOGIN_LOCK_STATE[lock_key] = lock_expires
+                _LOCAL_LOGIN_FAIL_STATE.pop(fail_key, None)
+                return True, settings.login_lock_seconds
         return False, 0
 
 
@@ -152,4 +194,6 @@ def clear_login_failures(scope: str, identifier: str) -> None:
         client.delete(_fail_key(scope, identifier))
         client.delete(_lock_key(scope, identifier))
     except RedisError:
-        return
+        with _LOCAL_LOCK:
+            _LOCAL_LOGIN_FAIL_STATE.pop(_fail_key(scope, identifier), None)
+            _LOCAL_LOGIN_LOCK_STATE.pop(_lock_key(scope, identifier), None)
