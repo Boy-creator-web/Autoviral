@@ -2,9 +2,12 @@ from __future__ import annotations
 
 import json
 
+from datetime import UTC, datetime, timedelta
+
 from sqlalchemy import Select, select
 from sqlalchemy.orm import Session
 
+from models.autonomous_plan import AutonomousPlan
 from models.autonomous_run import AutonomousRun
 from models.user import User
 from models.video import Video
@@ -222,4 +225,130 @@ def get_autonomous_dashboard(db: Session, *, user_id: int | None = None) -> dict
         "avg_drafted_outreach": avg_drafted,
         "latest_experiment_ids": latest_experiment_ids,
     }
+
+
+def create_autonomous_plan(
+    db: Session,
+    *,
+    user_id: int,
+    video_id: int | None,
+    name: str,
+    seed_text: str,
+    niche: str,
+    audience: str,
+    objective: str,
+    problem_angle: str,
+    offer: str | None,
+    tone: str,
+    platform: str,
+    region: str,
+    leads_count: int,
+    variants_count: int,
+    interval_minutes: int,
+    is_active: bool,
+) -> AutonomousPlan:
+    if db.get(User, user_id) is None:
+        raise ValueError("User not found")
+    if video_id is not None and db.get(Video, video_id) is None:
+        raise ValueError("Video not found")
+    if interval_minutes < 1:
+        raise ValueError("interval_minutes must be >= 1")
+
+    next_run_at = datetime.now(UTC) if is_active else None
+    row = AutonomousPlan(
+        user_id=user_id,
+        video_id=video_id,
+        name=name,
+        seed_text=seed_text,
+        niche=niche,
+        audience=audience,
+        objective=objective,
+        problem_angle=problem_angle,
+        offer=offer,
+        tone=tone,
+        platform=platform,
+        region=region,
+        leads_count=leads_count,
+        variants_count=variants_count,
+        interval_minutes=interval_minutes,
+        is_active=is_active,
+        next_run_at=next_run_at,
+        last_status=None,
+    )
+    db.add(row)
+    db.commit()
+    db.refresh(row)
+    return row
+
+
+def list_autonomous_plans(db: Session, *, user_id: int | None = None, active_only: bool = False) -> list[AutonomousPlan]:
+    statement: Select[tuple[AutonomousPlan]] = select(AutonomousPlan).order_by(AutonomousPlan.id.desc())
+    if user_id is not None:
+        statement = statement.where(AutonomousPlan.user_id == user_id)
+    if active_only:
+        statement = statement.where(AutonomousPlan.is_active.is_(True))
+    return list(db.scalars(statement).all())
+
+
+def get_autonomous_plan(db: Session, *, plan_id: int) -> AutonomousPlan:
+    row = db.get(AutonomousPlan, plan_id)
+    if row is None:
+        raise ValueError("Autonomous plan not found")
+    return row
+
+
+def set_autonomous_plan_active(db: Session, *, plan_id: int, is_active: bool) -> AutonomousPlan:
+    row = get_autonomous_plan(db, plan_id=plan_id)
+    row.is_active = is_active
+    if is_active and row.next_run_at is None:
+        row.next_run_at = datetime.now(UTC)
+    if not is_active:
+        row.next_run_at = None
+    db.commit()
+    db.refresh(row)
+    return row
+
+
+def run_due_autonomous_plans(db: Session, *, now: datetime | None = None) -> list[AutonomousRun]:
+    effective_now = now or datetime.now(UTC)
+    statement: Select[tuple[AutonomousPlan]] = (
+        select(AutonomousPlan)
+        .where(AutonomousPlan.is_active.is_(True))
+        .where(AutonomousPlan.next_run_at.is_not(None))
+        .where(AutonomousPlan.next_run_at <= effective_now)
+        .order_by(AutonomousPlan.id)
+    )
+    due_plans = list(db.scalars(statement).all())
+    runs: list[AutonomousRun] = []
+    for plan in due_plans:
+        try:
+            run = run_autonomous_cycle(
+                db=db,
+                user_id=plan.user_id,
+                video_id=plan.video_id,
+                seed_text=plan.seed_text,
+                niche=plan.niche,
+                audience=plan.audience,
+                objective=plan.objective,
+                problem_angle=plan.problem_angle,
+                offer=plan.offer,
+                tone=plan.tone,
+                platform=plan.platform,
+                region=plan.region,
+                leads_count=plan.leads_count,
+                variants_count=plan.variants_count,
+            )
+            plan.last_status = run.status
+            plan.last_error = run.error_message
+            plan.last_run_at = datetime.now(UTC)
+            runs.append(run)
+        except Exception as err:
+            plan.last_status = "failed"
+            plan.last_error = str(err)
+            plan.last_run_at = datetime.now(UTC)
+        finally:
+            plan.next_run_at = datetime.now(UTC) + timedelta(minutes=plan.interval_minutes)
+            db.commit()
+            db.refresh(plan)
+    return runs
 

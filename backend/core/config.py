@@ -28,6 +28,8 @@ class Settings(BaseSettings):
     postiz_integration_ids_json: str = (
         '{"tiktok":"","instagram":"","youtube":"","facebook":"","x":"","linkedin":""}'
     )
+    autonomous_scheduler_enabled: bool = False
+    autonomous_scheduler_tick_seconds: int = 30
 
     model_config = SettingsConfigDict(
         env_file=".env",

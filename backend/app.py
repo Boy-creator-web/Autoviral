@@ -8,12 +8,15 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from api.router import api_router
 from core.config import settings
 from core.database import init_db
+from services.autonomous_scheduler import start_scheduler, stop_scheduler
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     init_db()
+    start_scheduler()
     yield
+    await stop_scheduler()
 
 
 app = FastAPI(

@@ -319,3 +319,62 @@ class AutonomousDashboardRead(BaseModel):
     avg_qualified_leads: float
     avg_drafted_outreach: float
     latest_experiment_ids: list[int] = Field(default_factory=list)
+
+
+class AutonomousPlanCreateRequest(BaseModel):
+    user_id: int
+    video_id: int | None = None
+    name: str = Field(min_length=1, max_length=120)
+    seed_text: str = Field(min_length=1, max_length=500)
+    niche: str = Field(min_length=1, max_length=150)
+    audience: str = Field(min_length=1, max_length=200)
+    objective: str = Field(min_length=1, max_length=200)
+    problem_angle: str = Field(min_length=1, max_length=255)
+    offer: str | None = Field(default=None, max_length=255)
+    tone: str = Field(default="direct", min_length=3, max_length=80)
+    platform: str = Field(default="tiktok", min_length=2, max_length=50)
+    region: str = Field(default="ID", min_length=2, max_length=100)
+    leads_count: int = Field(default=5, ge=1, le=100)
+    variants_count: int = Field(default=3, ge=2, le=5)
+    interval_minutes: int = Field(default=360, ge=1, le=10_080)
+    is_active: bool = True
+
+
+class AutonomousPlanSetActiveRequest(BaseModel):
+    is_active: bool
+
+
+class AutonomousPlanRead(BaseModel):
+    id: int
+    user_id: int
+    video_id: int | None = None
+    name: str
+    seed_text: str
+    niche: str
+    audience: str
+    objective: str
+    problem_angle: str
+    offer: str | None = None
+    tone: str
+    platform: str
+    region: str
+    leads_count: int
+    variants_count: int
+    interval_minutes: int
+    is_active: bool
+    next_run_at: datetime | None = None
+    last_run_at: datetime | None = None
+    last_status: str | None = None
+    last_error: str | None = None
+    created_at: datetime
+    updated_at: datetime
+
+
+class AutonomousPlanListResponse(BaseModel):
+    count: int
+    plans: list[AutonomousPlanRead]
+
+
+class AutonomousSchedulerTickResponse(BaseModel):
+    executed_runs: int
+    run_ids: list[int] = Field(default_factory=list)
