@@ -7,6 +7,7 @@ from api.endpoints import (
     scraper_insights,
     synthetic_humans,
     users,
+    viral_engine,
     videos,
 )
 
@@ -22,3 +23,4 @@ api_router.include_router(videos.router, prefix="/videos", tags=["videos"])
 api_router.include_router(scraper_data.router, prefix="/scraper-data", tags=["scraper-data"])
 api_router.include_router(scraper_insights.router, prefix="/scraper", tags=["scraper"])
 api_router.include_router(sales_intel.router, prefix="/sales", tags=["sales-intel"])
+api_router.include_router(viral_engine.router, prefix="/viral-engine", tags=["viral-engine"])

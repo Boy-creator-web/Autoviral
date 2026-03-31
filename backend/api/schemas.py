@@ -150,3 +150,117 @@ class SalesOutreachDraftResponse(BaseModel):
 class SalesPipelineListResponse(BaseModel):
     count: int
     leads: list[SalesLeadRead]
+
+
+class ViralExperimentCreateRequest(BaseModel):
+    user_id: int
+    video_id: int | None = None
+    niche: str = Field(min_length=1, max_length=150)
+    audience: str = Field(min_length=1, max_length=200)
+    objective: str = Field(min_length=1, max_length=200)
+    problem_angle: str = Field(min_length=1, max_length=255)
+    offer: str | None = Field(default=None, max_length=255)
+    tone: str = Field(default="direct", min_length=3, max_length=80)
+    platform: str = Field(default="tiktok", min_length=2, max_length=50)
+    trend_context: str | None = Field(default=None, max_length=5000)
+    variants_count: int = Field(default=3, ge=2, le=5)
+
+
+class ViralVariantRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    experiment_id: int
+    variant_key: str
+    hook: str
+    script: str
+    cta: str
+    caption: str
+    hashtags: str
+    duration_target_sec: int
+    predicted_hook_rate: float
+    predicted_watch_rate: float
+    predicted_share_rate: float
+    predicted_save_rate: float
+    predicted_score: float
+
+
+class ViralExperimentRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    user_id: int
+    video_id: int | None
+    niche: str
+    audience: str
+    objective: str
+    problem_angle: str
+    offer: str | None
+    tone: str
+    platform: str
+    trend_context: str | None
+    status: str
+    baseline_score: float
+    created_at: datetime
+    updated_at: datetime
+
+
+class ViralExperimentCreateResponse(BaseModel):
+    experiment: ViralExperimentRead
+    variants: list[ViralVariantRead]
+
+
+class ViralExperimentListResponse(BaseModel):
+    count: int
+    experiments: list[ViralExperimentRead]
+
+
+class ViralVariantListResponse(BaseModel):
+    count: int
+    variants: list[ViralVariantRead]
+
+
+class ViralMetricIngestRequest(BaseModel):
+    impressions: int = Field(ge=0)
+    views_3s: int = Field(ge=0)
+    views_10s: int = Field(ge=0)
+    completions: int = Field(ge=0)
+    likes: int = Field(default=0, ge=0)
+    comments: int = Field(default=0, ge=0)
+    shares: int = Field(default=0, ge=0)
+    saves: int = Field(default=0, ge=0)
+    profile_visits: int = Field(default=0, ge=0)
+    link_clicks: int = Field(default=0, ge=0)
+    watch_time_avg_sec: float = Field(default=0.0, ge=0)
+    conversion_events: int = Field(default=0, ge=0)
+
+
+class ViralMetricRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    variant_id: int
+    impressions: int
+    views_3s: int
+    views_10s: int
+    completions: int
+    likes: int
+    comments: int
+    shares: int
+    saves: int
+    profile_visits: int
+    link_clicks: int
+    watch_time_avg_sec: float
+    conversion_events: int
+    created_at: datetime
+
+
+class ViralRecommendationRead(BaseModel):
+    experiment_id: int
+    winner_variant_id: int | None
+    winner_variant_key: str | None = None
+    winner_score: float | None = None
+    confidence: float | None = None
+    metric_breakdown: dict[str, float] = Field(default_factory=dict)
+    summary: str
+    actions: list[str] = Field(default_factory=list)

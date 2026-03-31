@@ -7,6 +7,7 @@ from . import (
     synthetic_humans,
     users,
     video,
+    viral_engine,
     videos,
 )
 
@@ -18,6 +19,7 @@ __all__ = [
     "scraper",
     "scraper_insights",
     "sales_intel",
+    "viral_engine",
     "human",
     "video",
 ]
