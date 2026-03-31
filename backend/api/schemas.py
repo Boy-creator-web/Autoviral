@@ -264,3 +264,58 @@ class ViralRecommendationRead(BaseModel):
     metric_breakdown: dict[str, float] = Field(default_factory=dict)
     summary: str
     actions: list[str] = Field(default_factory=list)
+
+
+class AutonomousRunRequest(BaseModel):
+    user_id: int
+    video_id: int | None = None
+    seed_text: str = Field(min_length=1, max_length=500)
+    niche: str = Field(min_length=1, max_length=150)
+    audience: str = Field(min_length=1, max_length=200)
+    objective: str = Field(min_length=1, max_length=200)
+    problem_angle: str = Field(min_length=1, max_length=255)
+    offer: str | None = Field(default=None, max_length=255)
+    tone: str = Field(default="direct", min_length=3, max_length=80)
+    platform: str = Field(default="tiktok", min_length=2, max_length=50)
+    region: str = Field(default="ID", min_length=2, max_length=100)
+    leads_count: int = Field(default=5, ge=1, le=100)
+    variants_count: int = Field(default=3, ge=2, le=5)
+
+
+class AutonomousRunRead(BaseModel):
+    id: int
+    user_id: int
+    video_id: int | None = None
+    seed_text: str
+    niche: str
+    audience: str
+    objective: str
+    region: str
+    platform: str
+    status: str
+    insight_topic: str | None = None
+    experiment_id: int | None = None
+    selected_variant_id: int | None = None
+    discovered_leads_count: int
+    qualified_leads_count: int
+    drafted_outreach_count: int
+    summary: dict = Field(default_factory=dict)
+    error_message: str | None = None
+    created_at: datetime
+    updated_at: datetime
+
+
+class AutonomousRunListResponse(BaseModel):
+    count: int
+    runs: list[AutonomousRunRead]
+
+
+class AutonomousDashboardRead(BaseModel):
+    total_runs: int
+    completed_runs: int
+    failed_runs: int
+    success_rate: float
+    avg_discovered_leads: float
+    avg_qualified_leads: float
+    avg_drafted_outreach: float
+    latest_experiment_ids: list[int] = Field(default_factory=list)

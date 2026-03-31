@@ -18,6 +18,7 @@ def get_db():
 
 def init_db() -> None:
     from models import (
+        autonomous_run,
         scraper_data,
         sales_lead,
         synthetic_human,
