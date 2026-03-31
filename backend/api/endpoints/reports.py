@@ -3,9 +3,11 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 
+from core.audit import audit_log
 from core.database import get_db
+from core.rate_limit import apply_rate_limit_headers, enforce_ip_rate_limit, enforce_user_rate_limit
 from core.security import get_current_user
 from models.campaign_report import CampaignReport
 from models.user import User
@@ -37,9 +39,14 @@ def list_reports(
 @router.post("/", response_model=CampaignReportRead, status_code=status.HTTP_201_CREATED)
 def create_report(
     payload: CampaignReportCreate,
+    request: Request,
+    response: Response,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> CampaignReportRead:
+    ip_limit = enforce_ip_rate_limit(request)
+    user_limit = enforce_user_rate_limit(current_user.id)
+    apply_rate_limit_headers(response, ip_limit, user_limit)
     if current_user.role != "admin" and current_user.id != payload.user_id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed for this user")
 
@@ -56,6 +63,13 @@ def create_report(
     db.add(row)
     db.commit()
     db.refresh(row)
+    audit_log(
+        "campaign_report_created",
+        actor=f"user:{current_user.id}",
+        target=f"report:{row.id}",
+        metadata={"owner_user_id": row.user_id, "period": row.period},
+        db=db,
+    )
     return CampaignReportRead(
         id=row.id,
         user_id=row.user_id,

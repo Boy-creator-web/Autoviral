@@ -21,3 +21,4 @@ class User(Base):
     payments = relationship("Payment", back_populates="user", cascade="all, delete-orphan")
     actions = relationship("CampaignAction", back_populates="user", cascade="all, delete-orphan")
     reports = relationship("CampaignReport", back_populates="user", cascade="all, delete-orphan")
+    audit_logs = relationship("AuditLog", back_populates="user")

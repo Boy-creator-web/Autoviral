@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     redis_url: str = "redis://redis:6379/0"
     rate_limit_requests: int = 120
     rate_limit_window_seconds: int = 60
+    login_fail_max_attempts: int = 5
+    login_fail_window_seconds: int = 300
+    login_lock_seconds: int = 900
     monitor_interval_seconds: int = 300
     backup_dir: str = "/root/autoviral/backups"
     backup_stale_minutes: int = 1440

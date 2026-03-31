@@ -1,6 +1,7 @@
 """Model package exports."""
 
 from models.campaign_action import CampaignAction
+from models.audit_log import AuditLog
 from models.campaign_report import CampaignReport
 from models.campaign_result import CampaignResult
 from models.payment import Payment
@@ -20,6 +21,7 @@ __all__ = [
     "Subscription",
     "Payment",
     "CampaignAction",
+    "AuditLog",
     "CampaignResult",
     "CampaignReport",
 ]

@@ -21,6 +21,7 @@ def get_db():
 def init_db() -> None:
     """Create database tables for all registered models."""
     from models import (  # noqa: F401
+        audit_log,
         campaign_action,
         campaign_report,
         campaign_result,

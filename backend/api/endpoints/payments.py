@@ -8,12 +8,12 @@ from hashlib import sha256
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from fastapi import APIRouter, Depends, Header, HTTPException, status
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, Response, status
 
 from core.audit import audit_log
 from core.config import settings
 from core.database import get_db
-from core.rate_limit import enforce_ip_rate_limit
+from core.rate_limit import apply_rate_limit_headers, enforce_ip_rate_limit, enforce_user_rate_limit
 from core.security import get_admin_user, get_current_user
 from models.payment import Payment
 from models.subscription import Subscription
@@ -49,9 +49,15 @@ def list_payments(db: Session = Depends(get_db)) -> list[PaymentRead]:
 @router.post("/", response_model=PaymentRead, status_code=status.HTTP_201_CREATED)
 def create_payment(
     payload: PaymentCreate,
+    request: Request,
+    response: Response,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> PaymentRead:
+    ip_limit = enforce_ip_rate_limit(request)
+    user_limit = enforce_user_rate_limit(current_user.id)
+    apply_rate_limit_headers(response, ip_limit, user_limit)
+
     if current_user.role != "admin" and current_user.id != payload.user_id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed for this user")
 
@@ -83,19 +89,28 @@ def create_payment(
 
     db.commit()
     db.refresh(row)
+    audit_log(
+        "payment_created",
+        actor=f"user:{current_user.id}",
+        target=f"payment:{row.id}",
+        metadata={"amount": payload.amount, "provider": payload.provider, "owner_user_id": payload.user_id},
+        db=db,
+    )
     return _to_read(row)
 
 
 @router.post("/webhook", response_model=PaymentRead)
 def payment_webhook(
     payload: PaymentCreate,
+    request: Request,
+    response: Response,
     db: Session = Depends(get_db),
     x_idempotency_key: str | None = Header(default=None, alias="X-Idempotency-Key"),
     x_signature: str | None = Header(default=None, alias="X-Signature"),
 ) -> PaymentRead:
-    enforce_ip_rate_limit  # keep import active for linter; called below
-    # soft-protect webhook endpoint from bursts
-    enforce_ip_rate_limit.__call__ if False else None
+    ip_limit = enforce_ip_rate_limit(request)
+    user_limit = enforce_user_rate_limit(payload.user_id, factor=4)
+    apply_rate_limit_headers(response, ip_limit, user_limit)
 
     if x_idempotency_key is None or len(x_idempotency_key.strip()) < 8:
         raise HTTPException(
@@ -110,6 +125,7 @@ def payment_webhook(
             actor="webhook",
             target=f"payment:{existing.id}",
             metadata={"invoice_no": existing.invoice_no, "user_id": existing.user_id},
+            db=db,
         )
         return _to_read(existing)
 
@@ -124,6 +140,7 @@ def payment_webhook(
             actor="webhook",
             target="payments/webhook",
             metadata={"user_id": payload.user_id, "provider": payload.provider},
+            db=db,
         )
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid webhook signature")
 
@@ -155,5 +172,6 @@ def payment_webhook(
         actor="webhook",
         target=f"payment:{row.id}",
         metadata={"invoice_no": row.invoice_no, "user_id": row.user_id, "amount": row.amount},
+        db=db,
     )
     return _to_read(row)

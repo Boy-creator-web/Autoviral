@@ -18,6 +18,12 @@ ACCESS_TOKEN_EXPIRE_MINUTES=120
 PAYMENT_WEBHOOK_SECRET=change-me-webhook-secret
 ALLOWED_ORIGINS=https://synapsetech.my.id
 DATABASE_URL=postgresql+psycopg2://autoviral:autoviral@postgres:5432/autoviral
+REDIS_URL=redis://redis:6379/0
+RATE_LIMIT_REQUESTS=120
+RATE_LIMIT_WINDOW_SECONDS=60
+LOGIN_FAIL_MAX_ATTEMPTS=5
+LOGIN_FAIL_WINDOW_SECONDS=300
+LOGIN_LOCK_SECONDS=900
 ```
 
 ## 3) Rebuild backend
@@ -100,4 +106,25 @@ Contoh cron check (setiap 5 menit):
 
 ```cron
 */5 * * * * /usr/bin/curl -fsS -H "Authorization: Bearer <TOKEN_ADMIN>" https://synapsetech.my.id/api/v1/monitor/status > /dev/null || echo "monitor failed"
+```
+
+## 10) Verify new hardening features
+
+### Rate-limit headers
+Semua endpoint penting akan mengembalikan header:
+
+```text
+X-RateLimit-Limit
+X-RateLimit-Remaining
+X-RateLimit-Reset
+```
+
+### Brute-force login lock
+Jika login gagal berulang melebihi batas, endpoint login mengembalikan `429` dengan `Retry-After`.
+
+### Audit log persistence
+Event audit sekarang disimpan ke tabel `audit_logs` (selain stdout). Cek cepat:
+
+```bash
+docker compose exec postgres psql -U autoviral -d autoviral -c "SELECT id, event, actor, target, created_at FROM audit_logs ORDER BY id DESC LIMIT 20;"
 ```
