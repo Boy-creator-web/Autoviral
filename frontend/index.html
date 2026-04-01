@@ -3,407 +3,111 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Autoviral - Platform Growth Otomatis</title>
+    <title>Autoviral by SynapseTech | Growth Engine untuk Bisnis</title>
     <meta
       name="description"
-      content="Autoviral: daftar harga, pendaftaran, pembayaran, tindakan campaign, laporan dan hasil dalam satu platform."
+      content="Website resmi Autoviral: lihat paket dan harga, pahami flow implementasi, daftar, checkout, dan jalankan campaign dengan laporan hasil terukur."
     />
-    <style>
-      :root {
-        --bg: #070b17;
-        --panel: #111a33;
-        --text: #ecf1ff;
-        --muted: #9fb0db;
-        --primary: #4f7cff;
-        --green: #1cc98d;
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-        background: radial-gradient(1200px 600px at 20% -10%, #1a2d60 0%, var(--bg) 55%);
-        color: var(--text);
-      }
-      .wrap { max-width: 1120px; margin: 0 auto; padding: 24px; }
-      .nav { display: flex; justify-content: space-between; align-items: center; }
-      .logo { font-weight: 700; letter-spacing: .4px; }
-      .badge { border: 1px solid #2f4683; padding: 7px 11px; border-radius: 999px; color: var(--muted); }
-      h1 { font-size: clamp(30px, 6vw, 54px); margin: 16px 0; line-height: 1.1; }
-      p { color: var(--muted); line-height: 1.7; }
-      .hero { padding: 48px 0 24px; }
-      .cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
-      .btn {
-        text-decoration: none;
-        padding: 12px 18px;
-        border-radius: 12px;
-        font-weight: 600;
-      }
-      .btn-primary { background: var(--primary); color: #fff; }
-      .btn-secondary { border: 1px solid #3a53a0; color: var(--text); }
-      .section { margin-top: 34px; }
-      .section h2 { margin: 0 0 10px; font-size: 28px; }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 14px;
-      }
-      .card {
-        background: linear-gradient(180deg, #17254a, var(--panel));
-        border: 1px solid #233566;
-        border-radius: 14px;
-        padding: 16px;
-      }
-      .card h3 { margin: 0 0 8px; }
-      .price { font-size: 28px; font-weight: 700; margin: 10px 0; color: #d8e4ff; }
-      code { background: #0e1a39; border-radius: 6px; padding: 2px 6px; color: #c9d9ff; }
-      .steps li { margin-bottom: 8px; color: var(--muted); }
-      .ok {
-        margin-top: 22px;
-        padding: 12px 14px;
-        border: 1px solid #1f5e4a;
-        border-radius: 12px;
-        background: #0f2b22;
-        color: #b8ffe6;
-      }
-      .form-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 12px;
-      }
-      .field {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-      .field label {
-        color: #c9d9ff;
-        font-size: 14px;
-      }
-      .field input,
-      .field select,
-      .field textarea {
-        background: #0e1731;
-        color: var(--text);
-        border: 1px solid #29427a;
-        border-radius: 10px;
-        padding: 10px 12px;
-        font: inherit;
-      }
-      .field textarea {
-        min-height: 88px;
-        resize: vertical;
-      }
-      .form-actions {
-        margin-top: 12px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-      .hint {
-        color: #9fb0db;
-        font-size: 13px;
-      }
-      .status {
-        margin-top: 12px;
-        border-radius: 10px;
-        padding: 10px 12px;
-        border: 1px solid #2b3e72;
-        background: #101b39;
-        color: #dbe6ff;
-        white-space: pre-wrap;
-      }
-      .status.error {
-        border-color: #7a2b2b;
-        background: #2e1515;
-        color: #ffd6d6;
-      }
-      .status.success {
-        border-color: #1f5e4a;
-        background: #0f2b22;
-        color: #b8ffe6;
-      }
-      footer { margin: 36px 0 18px; color: #7f91c8; font-size: 14px; }
-      a.inline { color: #9ec4ff; }
-    </style>
+    <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <div class="wrap">
-      <div class="nav">
-        <div class="logo">Autoviral</div>
-        <div class="badge">synapsetech.my.id</div>
+    <header class="site-header">
+      <div class="container nav">
+        <a href="/" class="brand">Autoviral</a>
+        <nav class="menu">
+          <a href="/pricing.html">Harga</a>
+          <a href="/solutions.html">Solusi</a>
+          <a href="/faq.html">FAQ</a>
+          <a href="/contact.html">Konsultasi</a>
+        </nav>
       </div>
+    </header>
 
+    <main>
       <section class="hero">
-        <h1>Platform Lengkap untuk <br />Campaign Viral Otomatis</h1>
-        <p>
-          Jalankan bisnis digital Anda end-to-end: mulai dari <strong>daftar harga</strong>,
-          <strong>pendaftaran</strong>, <strong>pembayaran</strong>, <strong>tindakan campaign</strong>,
-          hingga <strong>laporan & hasil</strong> dalam satu API platform.
-        </p>
-        <div class="cta">
-          <a class="btn btn-primary" href="/docs">Buka API Docs</a>
-          <a class="btn btn-secondary" href="/api/v1/health">Cek Health</a>
+        <div class="container hero-grid">
+          <div>
+            <p class="eyebrow">SynapseTech.my.id</p>
+            <h1>Platform Growth End-to-End untuk Bisnis Serius</h1>
+            <p>
+              Bukan sekadar landing page. Autoviral memberikan alur bisnis utuh:
+              <strong>pilih paket</strong>, <strong>pendaftaran</strong>,
+              <strong>pembayaran</strong>, <strong>eksekusi campaign</strong>,
+              hingga <strong>laporan hasil</strong>.
+            </p>
+            <div class="cta">
+              <a class="btn btn-primary" href="/pricing.html">Lihat Paket & Harga</a>
+              <a class="btn btn-secondary" href="/checkout.html">Mulai Berlangganan</a>
+            </div>
+          </div>
+          <aside class="card">
+            <h3>Flow Bisnis yang Kami Bangun</h3>
+            <ol class="flow">
+              <li>Prospect baca detail paket & use case</li>
+              <li>Pilih plan sesuai kapasitas bisnis</li>
+              <li>Daftar akun perusahaan</li>
+              <li>Lakukan checkout & pembayaran</li>
+              <li>Jalankan action campaign</li>
+              <li>Pantau report dan iterasi growth</li>
+            </ol>
+          </aside>
         </div>
       </section>
 
       <section class="section">
-        <h2>Kirim Pesanan</h2>
-        <p>
-          Form ini langsung terhubung ke API Autoviral. Setelah submit, sistem akan membuat user,
-          subscription, payment, dan campaign action secara berurutan.
-        </p>
-        <form id="order-form" class="card">
-          <div class="form-grid">
-            <div class="field">
-              <label for="full_name">Nama Lengkap</label>
-              <input id="full_name" name="full_name" type="text" required />
-            </div>
-            <div class="field">
-              <label for="email">Email</label>
-              <input id="email" name="email" type="email" required />
-            </div>
-            <div class="field">
-              <label for="phone">No. WhatsApp</label>
-              <input id="phone" name="phone" type="text" />
-            </div>
-            <div class="field">
-              <label for="password">Password</label>
-              <input id="password" name="password" type="password" minlength="8" required />
-            </div>
-            <div class="field">
-              <label for="plan_code">Paket</label>
-              <select id="plan_code" name="plan_code" required>
-                <option value="starter">Starter</option>
-                <option value="growth">Growth</option>
-                <option value="scale">Scale</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="campaign_title">Judul Campaign</label>
-              <input id="campaign_title" name="campaign_title" type="text" required />
-            </div>
-            <div class="field" style="grid-column: 1 / -1;">
-              <label for="brief">Brief Campaign</label>
-              <textarea id="brief" name="brief" placeholder="Contoh: produk skincare untuk target usia 20-35 di IG Reels"></textarea>
-            </div>
+        <div class="container">
+          <h2>Kenapa perusahaan memilih Autoviral?</h2>
+          <div class="grid cols-3">
+            <article class="card">
+              <h3>Jelas secara komersial</h3>
+              <p>Harga, kuota, fitur, dan model paket disajikan transparan untuk keputusan cepat.</p>
+            </article>
+            <article class="card">
+              <h3>Terukur secara operasional</h3>
+              <p>Dari subscription ke action sampai report, semuanya terhubung ke sistem yang sama.</p>
+            </article>
+            <article class="card">
+              <h3>Siap scale</h3>
+              <p>Arsitektur API-ready, bisa disambungkan ke tim sales, CRM, atau dashboard internal.</p>
+            </article>
           </div>
-          <div class="form-actions">
-            <button id="submit-btn" class="btn btn-primary" type="submit">Kirim Pesanan</button>
-            <span class="hint">Gunakan email baru (yang belum pernah terdaftar).</span>
-          </div>
-          <div id="order-status" class="status" role="status" aria-live="polite">
-            Siap menerima pesanan.
-          </div>
-        </form>
-      </section>
-
-      <section class="section">
-        <h2>Daftar Harga</h2>
-        <div class="grid">
-          <article class="card">
-            <h3>Starter</h3>
-            <div class="price">Rp299.000 / bulan</div>
-            <p>20 video, 5 campaign, 50 scraper insight.</p>
-          </article>
-          <article class="card">
-            <h3>Growth</h3>
-            <div class="price">Rp799.000 / bulan</div>
-            <p>80 video, 20 campaign, 250 scraper insight.</p>
-          </article>
-          <article class="card">
-            <h3>Scale</h3>
-            <div class="price">Rp1.999.000 / bulan</div>
-            <p>300 video, 80 campaign, 1000 scraper insight.</p>
-          </article>
         </div>
       </section>
 
-      <section class="section">
-        <h2>Alur Operasional</h2>
-        <ol class="steps">
-          <li><strong>Pendaftaran user</strong> via <code>POST /api/v1/users</code></li>
-          <li><strong>Pilih plan</strong> via <code>GET /api/v1/pricing</code> & <code>POST /api/v1/subscriptions</code></li>
-          <li><strong>Pembayaran</strong> via <code>POST /api/v1/payments</code></li>
-          <li><strong>Tindakan campaign</strong> via <code>POST /api/v1/actions</code></li>
-          <li><strong>Generate hasil</strong> via <code>POST /api/v1/results</code></li>
-          <li><strong>Laporan periodik</strong> via <code>POST /api/v1/reports</code></li>
-        </ol>
-      </section>
-
-      <section class="section">
-        <h2>Fitur Inti</h2>
-        <div class="grid">
-          <article class="card">
-            <h3>Scraper Intelligence</h3>
-            <p>Kelola insight trend dan kompetitor lewat endpoint <code>/api/v1/scraper</code>.</p>
-          </article>
-          <article class="card">
-            <h3>Synthetic Human</h3>
-            <p>Bangun aset karakter digital melalui <code>/api/v1/synthetic-humans</code> dan <code>/api/v1/human</code>.</p>
-          </article>
-          <article class="card">
-            <h3>Video Factory</h3>
-            <p>Kelola pipeline video di <code>/api/v1/videos</code> dan <code>/api/v1/video</code>.</p>
-          </article>
+      <section class="section section-soft">
+        <div class="container">
+          <h2>Langkah cepat untuk mulai</h2>
+          <div class="steps">
+            <div class="step">
+              <span>1</span>
+              <div>
+                <h4>Pahami paket</h4>
+                <p>Bandingkan Starter, Growth, dan Scale di halaman harga.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span>2</span>
+              <div>
+                <h4>Checkout</h4>
+                <p>Masukkan data perusahaan, pilih plan, dan lakukan pembayaran.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span>3</span>
+              <div>
+                <h4>Eksekusi campaign</h4>
+                <p>Set objective, jalankan action, dan pantau hasil dari report periodik.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
+    </main>
 
-      <div class="ok">
-        Status: <strong>Ready</strong> · Integrasi website + API aktif pada domain ini.
+    <footer class="site-footer">
+      <div class="container">
+        <p>© 2026 SynapseTech · Autoviral Business Platform</p>
       </div>
-
-      <footer>
-        © 2026 SynapseTech · Autoviral Platform ·
-        <a class="inline" href="/openapi.json">OpenAPI Schema</a>
-      </footer>
-    </div>
-    <script>
-      const form = document.getElementById("order-form");
-      const submitBtn = document.getElementById("submit-btn");
-      const statusBox = document.getElementById("order-status");
-
-      function setStatus(message, type) {
-        statusBox.textContent = message;
-        statusBox.classList.remove("error", "success");
-        if (type) statusBox.classList.add(type);
-      }
-
-      async function parseApiError(resp) {
-        try {
-          const data = await resp.json();
-          if (typeof data?.detail === "string") return data.detail;
-          return JSON.stringify(data);
-        } catch (_) {
-          return await resp.text();
-        }
-      }
-
-      async function postJson(url, body, token) {
-        const resp = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          body: JSON.stringify(body),
-        });
-        if (!resp.ok) {
-          throw new Error(await parseApiError(resp));
-        }
-        return resp.json();
-      }
-
-      async function postForm(url, fields) {
-        const payload = new URLSearchParams(fields);
-        const resp = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: payload.toString(),
-        });
-        if (!resp.ok) {
-          throw new Error(await parseApiError(resp));
-        }
-        return resp.json();
-      }
-
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        submitBtn.disabled = true;
-        setStatus("Memproses pesanan... mohon tunggu.", "");
-
-        const values = {
-          full_name: form.full_name.value.trim(),
-          email: form.email.value.trim().toLowerCase(),
-          phone: form.phone.value.trim(),
-          password: form.password.value,
-          plan_code: form.plan_code.value,
-          campaign_title: form.campaign_title.value.trim(),
-          brief: form.brief.value.trim(),
-        };
-
-        try {
-          const user = await postJson("/api/v1/users/", {
-            full_name: values.full_name,
-            email: values.email,
-            phone: values.phone || null,
-            password: values.password,
-          });
-
-          const login = await postForm("/api/v1/auth/login", {
-            username: values.email,
-            password: values.password,
-          });
-          const token = login.access_token;
-          if (!token) {
-            throw new Error("Token login tidak diterima dari server.");
-          }
-
-          const pricingResp = await fetch("/api/v1/pricing/");
-          if (!pricingResp.ok) {
-            throw new Error(await parseApiError(pricingResp));
-          }
-          const pricing = await pricingResp.json();
-          const plan = pricing.find((item) => item.code === values.plan_code);
-          if (!plan) {
-            throw new Error("Plan tidak ditemukan.");
-          }
-
-          const subscription = await postJson(
-            "/api/v1/subscriptions/",
-            {
-              user_id: user.id,
-              plan_id: plan.id,
-              months: 1,
-            },
-            token
-          );
-
-          const payment = await postJson(
-            "/api/v1/payments/",
-            {
-              user_id: user.id,
-              subscription_id: subscription.id,
-              amount: plan.price_monthly,
-              provider: "website",
-            },
-            token
-          );
-
-          const action = await postJson(
-            "/api/v1/actions/",
-            {
-              user_id: user.id,
-              action_type: "launch_campaign",
-              title: values.campaign_title,
-              payload: JSON.stringify({
-                brief: values.brief,
-                plan_code: values.plan_code,
-                source: "landing_form",
-              }),
-            },
-            token
-          );
-
-          setStatus(
-            `Pesanan berhasil diproses.\n` +
-              `User ID: ${user.id}\n` +
-              `Subscription ID: ${subscription.id}\n` +
-              `Invoice: ${payment.invoice_no}\n` +
-              `Action ID: ${action.id}`,
-            "success"
-          );
-          form.reset();
-        } catch (err) {
-          setStatus(
-            `Pesanan gagal diproses: ${err.message}\n` +
-              `Jika email sudah pernah terdaftar, gunakan email baru atau lakukan login via /docs.`,
-            "error"
-          );
-        } finally {
-          submitBtn.disabled = false;
-        }
-      });
-    </script>
+    </footer>
   </body>
 </html>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout - SynapseTech</title>
+    <meta
+      name="description"
+      content="Checkout paket SynapseTech: isi data bisnis, pilih paket, dan kirim permintaan pembayaran."
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav">
+        <a href="/" class="brand">SynapseTech</a>
+        <nav class="menu">
+          <a href="/solutions.html">Solutions</a>
+          <a href="/pricing.html">Pricing</a>
+          <a href="/faq.html">FAQ</a>
+          <a href="/contact.html">Contact</a>
+          <a href="/checkout.html" class="btn btn-primary">Checkout</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero compact">
+        <div class="container">
+          <h1>Checkout Paket SynapseTech</h1>
+          <p>
+            Isi data lengkap agar tim kami bisa langsung menyiapkan environment, workflow, dan metode
+            pembayaran sesuai paket pilihan Anda.
+          </p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container grid-2">
+          <div class="card">
+            <h3>Ringkasan Paket</h3>
+            <p class="muted">
+              Paket default: <strong id="selected-plan-label">Starter</strong>. Anda bisa ubah sebelum submit.
+            </p>
+            <ul class="check-list">
+              <li>Setup akun dan akses dashboard</li>
+              <li>Konfigurasi pipeline konten + campaign</li>
+              <li>Integrasi payment dan operation flow</li>
+              <li>Pendampingan onboarding awal</li>
+            </ul>
+            <p class="muted small">
+              Catatan: checkout ini mengirim permintaan penawaran/faktur. Metode pembayaran final
+              (transfer, VA, payment link) akan disesuaikan saat konfirmasi tim.
+            </p>
+          </div>
+
+          <form id="businessCheckoutForm" class="card form-stack">
+            <h3>Form Checkout Bisnis</h3>
+            <div class="field">
+              <label for="full_name">Nama Lengkap</label>
+              <input id="full_name" name="full_name" required maxlength="120" />
+            </div>
+            <div class="field">
+              <label for="email">Email Bisnis</label>
+              <input id="email" name="email" type="email" required maxlength="255" />
+            </div>
+            <div class="field">
+              <label for="phone">WhatsApp</label>
+              <input id="phone" name="phone" required minlength="5" maxlength="32" />
+            </div>
+            <div class="field">
+              <label for="business_name">Nama Bisnis / Perusahaan</label>
+              <input id="business_name" name="business_name" required maxlength="180" />
+            </div>
+            <div class="field">
+              <label for="niche">Niche / Industri</label>
+              <input id="niche" name="niche" required maxlength="150" />
+            </div>
+            <div class="field">
+              <label for="monthly_revenue_target">Target Omset Bulanan (IDR)</label>
+              <input
+                id="monthly_revenue_target"
+                name="monthly_revenue_target"
+                type="number"
+                min="0"
+                step="100000"
+              />
+            </div>
+            <div class="field">
+              <label for="preferred_plan">Paket yang Dipilih</label>
+              <select id="preferred_plan" name="preferred_plan">
+                <option value="starter">Starter - Rp299.000</option>
+                <option value="growth">Growth - Rp799.000</option>
+                <option value="pro">Pro - Rp1.499.000</option>
+                <option value="enterprise">Enterprise - Custom</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="pain_point">Pain Point Utama</label>
+              <textarea id="pain_point" name="pain_point" required maxlength="2000"></textarea>
+            </div>
+            <div class="field">
+              <label for="desired_outcome">Outcome 90 Hari yang Diinginkan</label>
+              <textarea id="desired_outcome" name="desired_outcome" required maxlength="2000"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Kirim Checkout</button>
+            <p id="formStatus" class="form-status" aria-live="polite"></p>
+            <p class="small muted">
+              Setelah sukses submit, Anda akan diarahkan ke halaman konfirmasi.
+            </p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>© <span id="year"></span> SynapseTech</p>
+      </div>
+    </footer>
+
+    <script src="/site.js?v=20260401-fullbiz"></script>
+  </body>
+</html>
