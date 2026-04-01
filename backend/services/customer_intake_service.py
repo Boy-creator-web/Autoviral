@@ -1,7 +1,10 @@
+import hashlib
+
 from sqlalchemy import Select, select
 from sqlalchemy.orm import Session
 
 from api.schemas import CustomerIntakeCreate
+from core.config import settings
 from models.customer_intake import CustomerIntake
 from models.user import User
 from services.autonomous_orchestrator_service import bootstrap_daily_mode
@@ -98,6 +101,71 @@ def confirm_customer_payment(
     db.commit()
     db.refresh(row)
     return row
+
+
+def _extract_intake_id_from_order_id(order_id: str) -> int:
+    value = order_id.strip()
+    prefix = "INTAKE-"
+    if not value.upper().startswith(prefix):
+        raise ValueError("Unsupported order_id format")
+    try:
+        return int(value[len(prefix):])
+    except ValueError as err:
+        raise ValueError("Invalid intake ID in order_id") from err
+
+
+def verify_midtrans_signature(
+    *,
+    order_id: str,
+    status_code: str,
+    gross_amount: str,
+    signature_key: str,
+) -> bool:
+    server_key = settings.midtrans_server_key.strip()
+    if not server_key:
+        return False
+    raw = f"{order_id}{status_code}{gross_amount}{server_key}"
+    computed = hashlib.sha512(raw.encode("utf-8")).hexdigest()
+    return computed == signature_key
+
+
+def apply_midtrans_notification(db: Session, payload: dict) -> CustomerIntake | None:
+    order_id = str(payload.get("order_id") or "").strip()
+    transaction_status = str(payload.get("transaction_status") or "").strip().lower()
+    fraud_status = str(payload.get("fraud_status") or "").strip().lower()
+    status_code = str(payload.get("status_code") or "")
+    gross_amount = str(payload.get("gross_amount") or "")
+    signature_key = str(payload.get("signature_key") or "")
+    payment_type = str(payload.get("payment_type") or "midtrans")
+
+    if not order_id or not status_code or not gross_amount or not signature_key:
+        raise ValueError("Incomplete Midtrans notification payload")
+    if not verify_midtrans_signature(
+        order_id=order_id,
+        status_code=status_code,
+        gross_amount=gross_amount,
+        signature_key=signature_key,
+    ):
+        raise ValueError("Invalid Midtrans signature")
+
+    intake_id = _extract_intake_id_from_order_id(order_id)
+    intake = get_customer_intake(db, intake_id=intake_id)
+
+    success = transaction_status in {"settlement", "capture"} and (
+        transaction_status == "settlement" or fraud_status in {"", "accept"}
+    )
+    if not success:
+        return None
+
+    intake.mark_payment_received(
+        reference=order_id,
+        method=payment_type or "midtrans",
+        amount=float(gross_amount or 0),
+    )
+    intake.status = "payment_confirmed"
+    db.commit()
+    db.refresh(intake)
+    return intake
 
 
 def _user_for_intake(db: Session, intake: CustomerIntake):

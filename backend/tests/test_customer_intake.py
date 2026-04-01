@@ -119,3 +119,75 @@ def test_confirm_payment_and_start_engine_flow(client):
     assert started["plan"]["id"] is not None
     if started["run"] is not None:
         assert started["run"]["status"] in {"completed", "failed"}
+
+
+def test_midtrans_webhook_confirms_payment(client, monkeypatch):
+    monkeypatch.setattr(
+        "services.customer_intake_service.settings.midtrans_server_key",
+        "test-server-key",
+    )
+
+    create_resp = client.post(
+        "/api/v1/customer-intake/",
+        json={
+            "full_name": "Rina Maharani",
+            "email": "rina@bisnis.id",
+            "phone": "+6281222233344",
+            "business_name": "Rina Digital",
+            "niche": "fashion",
+            "product_name": "Kelas Branding Fashion",
+            "product_category": "Edukasi",
+            "product_price_range": "Rp500.000 - Rp2.000.000",
+            "business_model": "b2c",
+            "target_customer_profile": "Owner brand fashion lokal",
+            "target_region": "Indonesia",
+            "main_platforms": "TikTok, Instagram",
+            "primary_kpi": "sales_conversion",
+            "current_monthly_leads": 60,
+            "current_conversion_rate_percent": 2.8,
+            "sales_cycle_days": 12,
+            "monthly_marketing_budget": 10000000,
+            "preferred_contact_time": "Senin-Jumat 09.00-18.00",
+            "monthly_revenue_target": 120000000,
+            "preferred_plan": "growth",
+            "pain_point": "Leads lumayan tapi conversion rendah.",
+            "desired_outcome": "Conversion rate naik signifikan.",
+            "source": "synapsetech.my.id",
+        },
+    )
+    assert create_resp.status_code == 201
+    intake_id = create_resp.json()["id"]
+
+    order_id = f"INTAKE-{intake_id}"
+    status_code = "200"
+    gross_amount = "2500000.00"
+    import hashlib
+
+    signature = hashlib.sha512(
+        f"{order_id}{status_code}{gross_amount}test-server-key".encode("utf-8")
+    ).hexdigest()
+
+    webhook_resp = client.post(
+        "/api/v1/customer-intake/midtrans/webhook",
+        json={
+            "order_id": order_id,
+            "status_code": status_code,
+            "gross_amount": gross_amount,
+            "signature_key": signature,
+            "transaction_status": "settlement",
+            "fraud_status": "accept",
+            "payment_type": "qris",
+        },
+    )
+    assert webhook_resp.status_code == 200
+    payload = webhook_resp.json()
+    assert payload["ok"] is True
+    assert payload["updated"] is True
+    assert payload["intake_id"] == intake_id
+
+    rows_resp = client.get("/api/v1/customer-intake/")
+    assert rows_resp.status_code == 200
+    rows = rows_resp.json()["items"]
+    row = next(item for item in rows if item["id"] == intake_id)
+    assert row["payment_status"] == "paid"
+    assert row["payment_reference"] == order_id

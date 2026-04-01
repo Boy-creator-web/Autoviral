@@ -11,6 +11,7 @@ from api.schemas import (
 )
 from core.database import get_db
 from services.customer_intake_service import (
+    apply_midtrans_notification,
     confirm_customer_payment,
     create_customer_intake,
     list_customer_intakes,
@@ -55,6 +56,23 @@ def confirm_payment_endpoint(
     except ValueError as err:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(err)) from err
     return CustomerIntakeRead.model_validate(row)
+
+
+@router.post("/midtrans/webhook")
+def midtrans_webhook_endpoint(
+    payload: dict,
+    db: Session = Depends(get_db),
+) -> dict:
+    try:
+        row = apply_midtrans_notification(db=db, payload=payload)
+    except ValueError as err:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(err)) from err
+    return {
+        "ok": True,
+        "updated": row is not None,
+        "intake_id": row.id if row else None,
+        "payment_status": row.payment_status if row else None,
+    }
 
 
 @router.post("/start-engine", response_model=CustomerEngineStartResponse)
