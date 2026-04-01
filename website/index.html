@@ -73,27 +73,59 @@
             <div class="form-grid">
               <label>
                 Nama Lengkap
-                <input name="full_name" required maxlength="120" />
+                <input
+                  name="full_name"
+                  required
+                  maxlength="120"
+                  placeholder="Contoh: Budi Santoso"
+                />
               </label>
               <label>
                 Email Bisnis
-                <input name="email" type="email" required maxlength="255" />
+                <input
+                  name="email"
+                  type="email"
+                  required
+                  maxlength="255"
+                  placeholder="Contoh: budi@bisnisanda.com"
+                />
               </label>
               <label>
                 WhatsApp
-                <input name="phone" required maxlength="32" />
+                <input
+                  name="phone"
+                  required
+                  maxlength="32"
+                  placeholder="Contoh: +628123456789"
+                />
               </label>
               <label>
                 Nama Bisnis
-                <input name="business_name" required maxlength="180" />
+                <input
+                  name="business_name"
+                  required
+                  maxlength="180"
+                  placeholder="Contoh: PT Maju Jaya Abadi"
+                />
               </label>
               <label>
                 Niche
-                <input name="niche" required maxlength="150" />
+                <input
+                  name="niche"
+                  required
+                  maxlength="150"
+                  placeholder="Contoh: Skincare, Property, Edukasi"
+                />
               </label>
               <label>
                 Omset Target Bulanan (IDR)
-                <input name="monthly_revenue_target" type="number" min="0" step="100000" />
+                <input
+                  name="monthly_revenue_target"
+                  type="number"
+                  min="0"
+                  step="100000"
+                  placeholder="Contoh: 150000000"
+                />
               </label>
               <label>
                 Paket yang diminati
@@ -108,12 +140,22 @@
 
             <label>
               Pain Point Utama
-              <textarea name="pain_point" required maxlength="2000"></textarea>
+              <textarea
+                name="pain_point"
+                required
+                maxlength="2000"
+                placeholder="Contoh: Konten banyak views, tapi leads masuk sedikit dan closing lambat."
+              ></textarea>
             </label>
 
             <label>
               Outcome yang diharapkan 90 hari
-              <textarea name="desired_outcome" required maxlength="2000"></textarea>
+              <textarea
+                name="desired_outcome"
+                required
+                maxlength="2000"
+                placeholder="Contoh: Leads naik 2x, conversion rate naik 30%, dan proses follow-up lebih cepat."
+              ></textarea>
             </label>
 
             <button type="submit" class="btn btn-primary">Kirim Permintaan</button>
