@@ -3,6 +3,7 @@ from . import (
     customer_intake,
     health,
     human,
+    human_compat,
     scraper,
     scraper_insights,
     sales_intel,
@@ -17,6 +18,8 @@ __all__ = [
     "autonomous",
     "customer_intake",
     "health",
+    "human",
+    "human_compat",
     "users",
     "synthetic_humans",
     "videos",
@@ -24,6 +27,5 @@ __all__ = [
     "scraper_insights",
     "sales_intel",
     "viral_engine",
-    "human",
     "video",
 ]

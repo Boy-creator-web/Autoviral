@@ -289,6 +289,39 @@ class CustomerAiCsChatResponse(BaseModel):
     handoff_required: bool = False
 
 
+class HumanCompatCreateRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=255)
+    age: int = Field(ge=0, le=120)
+    gender: str = Field(min_length=1, max_length=50)
+    style: str = Field(min_length=1, max_length=100)
+
+
+class HumanCompatRead(BaseModel):
+    id: int
+    name: str
+    age: int
+    gender: str
+    style: str
+    user_id: int
+
+
+class HumanCompatListResponse(BaseModel):
+    count: int
+    items: list[HumanCompatRead]
+
+
+class HumanCompatTrainRequest(BaseModel):
+    text: str = Field(min_length=1, max_length=2000)
+    human_id: int
+
+
+class HumanCompatTrainResponse(BaseModel):
+    ok: bool
+    human_id: int
+    audio_file: str
+    audio_format: str = "mp3"
+
+
 class ViralExperimentCreateRequest(BaseModel):
     user_id: int
     video_id: int | None = None
