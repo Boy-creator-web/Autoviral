@@ -172,3 +172,49 @@ LETSENCRYPT_EMAIL=admin@synapsetech.my.id \
 ```
 
 Pastikan DNS `A` record domain sudah mengarah ke IP VPS sebelum menjalankan script.
+
+## 11) Jadikan backend permanen + verifikasi checkout + backup + lock
+
+Untuk skenario hotfix saat backend sempat dijalankan manual `docker run`, gunakan script ini agar state menjadi stabil dan otomatis start saat reboot.
+
+### A. Install service backend (systemd)
+
+```bash
+chmod +x /root/autoviral/ops/vps/install_backend_systemd.sh
+/root/autoviral/ops/vps/install_backend_systemd.sh
+```
+
+Script akan:
+- memastikan env penting (`API_KEY_REQUIRED=false`, `SOCIAL_CREDENTIALS_ENCRYPTION_KEY`) tersedia
+- build image backend terbaru
+- menulis unit `systemd` bernama `autoviral-backend.service`
+- auto-start backend container saat boot
+
+### B. Finalize checkout flow + backup + lock
+
+```bash
+chmod +x /root/autoviral/ops/vps/finalize_checkout_and_lock.sh
+/root/autoviral/ops/vps/finalize_checkout_and_lock.sh
+```
+
+Script akan:
+- verifikasi endpoint health + checkout (`422` expected untuk body kosong)
+- menjalankan backup snapshot terbaru (`ops/vps/backup_autoviral.sh`)
+- membuat lock file immutable pada konfigurasi kritikal:
+  - `/root/autoviral/backend/.env`
+  - `/etc/nginx/sites-available/synapsetech-my-id.conf`
+  - `/etc/nginx/sites-enabled/synapsetech-my-id.conf` (jika bukan symlink)
+  - `/etc/systemd/system/autoviral-backend.service`
+
+Catatan:
+- Lock memakai `chattr +i`, sehingga file tidak bisa diubah sebelum unlock.
+- Ini cocok untuk mode "jangan berubah lagi" setelah stabil.
+
+### C. Unlock saat butuh maintenance/perubahan
+
+```bash
+chmod +x /root/autoviral/ops/vps/unlock_autoviral.sh
+/root/autoviral/ops/vps/unlock_autoviral.sh
+```
+
+Setelah unlock, Anda bisa update config/deploy normal kembali.
