@@ -3,6 +3,7 @@
 from api.endpoints import (
     actions,
     auth,
+    customer_intake,
     health,
     human,
     monitor,
@@ -21,6 +22,7 @@ from api.endpoints import (
 
 __all__ = [
     "health",
+    "customer_intake",
     "auth",
     "users",
     "synthetic_humans",

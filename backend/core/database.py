@@ -25,6 +25,7 @@ def init_db() -> None:
         campaign_action,
         campaign_report,
         campaign_result,
+        customer_intake,
         payment,
         pricing_plan,
         scraper_data,

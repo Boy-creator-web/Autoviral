@@ -4,6 +4,7 @@ from fastapi import APIRouter
 
 from api.endpoints.actions import router as actions_router
 from api.endpoints.auth import router as auth_router
+from api.endpoints.customer_intake import router as customer_intake_router
 from api.endpoints.health import router as health_router
 from api.endpoints.human import router as human_router
 from api.endpoints.monitor import router as monitor_router
@@ -21,6 +22,7 @@ from api.endpoints.videos import router as videos_router
 
 api_router = APIRouter()
 api_router.include_router(health_router, tags=["health"])
+api_router.include_router(customer_intake_router, prefix="/customer-intake", tags=["customer-intake"])
 api_router.include_router(auth_router, prefix="/auth", tags=["auth"])
 api_router.include_router(users_router, prefix="/users", tags=["users"])
 api_router.include_router(

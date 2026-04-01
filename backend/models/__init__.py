@@ -4,6 +4,7 @@ from models.campaign_action import CampaignAction
 from models.audit_log import AuditLog
 from models.campaign_report import CampaignReport
 from models.campaign_result import CampaignResult
+from models.customer_intake import CustomerIntake
 from models.payment import Payment
 from models.pricing_plan import PricingPlan
 from models.scraper_data import ScraperData
@@ -22,6 +23,7 @@ __all__ = [
     "Payment",
     "CampaignAction",
     "AuditLog",
+    "CustomerIntake",
     "CampaignResult",
     "CampaignReport",
 ]

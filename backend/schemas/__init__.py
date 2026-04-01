@@ -1,5 +1,4 @@
 """Schema package exports."""
-
 from schemas.billing import (
     PaymentCreate,
     PaymentRead,
@@ -17,6 +16,7 @@ from schemas.operations import (
 )
 from schemas.scraper_data import ScraperDataCreate, ScraperDataRead
 from schemas.synthetic_human import SyntheticHumanCreate, SyntheticHumanRead
+from schemas.customer_intake import CustomerIntakeCreate, CustomerIntakeRead
 from schemas.user import UserCreate, UserRead
 from schemas.video import VideoCreate, VideoRead
 
@@ -27,6 +27,8 @@ __all__ = [
     "SyntheticHumanRead",
     "VideoCreate",
     "VideoRead",
+    "CustomerIntakeCreate",
+    "CustomerIntakeRead",
     "ScraperDataCreate",
     "ScraperDataRead",
     "PricingPlanRead",
