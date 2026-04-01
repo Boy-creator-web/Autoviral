@@ -150,6 +150,54 @@ textarea {
   color: #9ad3ff;
 }
 
+.form-status.success {
+  color: #8af5b5;
+}
+
+.form-status.error {
+  color: #ff9aa6;
+}
+
+.ai-cs-widget {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.ai-cs-messages {
+  background: #0d1420;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  max-height: 360px;
+  overflow-y: auto;
+  display: grid;
+  gap: 10px;
+}
+
+.ai-cs-message {
+  max-width: min(90%, 720px);
+  border-radius: 10px;
+  padding: 10px 12px;
+  white-space: pre-wrap;
+}
+
+.ai-cs-message.ai {
+  background: #152039;
+  border: 1px solid #2a3f68;
+}
+
+.ai-cs-message.user {
+  margin-left: auto;
+  background: #123527;
+  border: 1px solid #246c4d;
+}
+
+.ai-cs-form {
+  display: grid;
+  gap: 12px;
+}
+
 .footer {
   border-top: 1px solid var(--border);
   padding: 22px 0;

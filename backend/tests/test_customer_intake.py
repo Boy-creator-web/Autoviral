@@ -191,3 +191,23 @@ def test_midtrans_webhook_confirms_payment(client, monkeypatch):
     row = next(item for item in rows if item["id"] == intake_id)
     assert row["payment_status"] == "paid"
     assert row["payment_reference"] == order_id
+
+
+def test_ai_cs_chat_endpoint(client):
+    resp = client.post(
+        "/api/v1/customer-intake/ai-cs/chat",
+        json={
+            "message": "Bagaimana alur dari pembayaran sampai engine jalan otomatis?",
+            "customer_name": "Raka",
+            "business_name": "Raka Retail",
+            "email": "raka@retail.id",
+            "source": "synapsetech.my.id",
+        },
+    )
+    assert resp.status_code == 200
+    payload = resp.json()
+    assert "AI CS SynapseTech" in payload["reply"]
+    assert "klik 'Kerjakan'" in payload["reply"]
+    assert payload["handoff_required"] is False
+    assert payload["suggested_plan"] in {"starter", "growth", "pro", "enterprise"}
+    assert len(payload["suggested_actions"]) >= 1

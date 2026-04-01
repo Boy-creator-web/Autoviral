@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from api.schemas import (
+    CustomerAiCsChatRequest,
+    CustomerAiCsChatResponse,
     CustomerEngineStartRequest,
     CustomerEngineStartResponse,
     CustomerIntakeCreate,
@@ -14,6 +16,7 @@ from services.customer_intake_service import (
     apply_midtrans_notification,
     confirm_customer_payment,
     create_customer_intake,
+    generate_ai_cs_reply,
     list_customer_intakes,
     start_engine_for_intake,
 )
@@ -73,6 +76,21 @@ def midtrans_webhook_endpoint(
         "intake_id": row.id if row else None,
         "payment_status": row.payment_status if row else None,
     }
+
+
+@router.post("/ai-cs/chat", response_model=CustomerAiCsChatResponse)
+def ai_cs_chat_endpoint(payload: CustomerAiCsChatRequest) -> CustomerAiCsChatResponse:
+    reply, suggested_actions, suggested_plan, handoff_required = generate_ai_cs_reply(
+        message=payload.message,
+        customer_name=payload.customer_name,
+        business_name=payload.business_name,
+    )
+    return CustomerAiCsChatResponse(
+        reply=reply,
+        suggested_actions=suggested_actions,
+        suggested_plan=suggested_plan,
+        handoff_required=handoff_required,
+    )
 
 
 @router.post("/start-engine", response_model=CustomerEngineStartResponse)

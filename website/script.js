@@ -1,6 +1,13 @@
 const form = document.getElementById("intakeForm");
 const statusEl = document.getElementById("formStatus");
 const yearEl = document.getElementById("year");
+const aiCsForm = document.getElementById("aiCsForm");
+const aiCsStatusEl = document.getElementById("aiCsStatus");
+const aiCsMessages = document.getElementById("aiCsMessages");
+const aiCsInput = document.getElementById("aiCsInput");
+const aiCsCustomerName = document.getElementById("aiCsCustomerName");
+const aiCsBusinessName = document.getElementById("aiCsBusinessName");
+const aiCsEmail = document.getElementById("aiCsEmail");
 
 if (yearEl) {
   yearEl.textContent = String(new Date().getFullYear());
@@ -20,6 +27,33 @@ async function submitForm(payload) {
     throw new Error(detail);
   }
   return response.json();
+}
+
+async function submitAiCs(payload) {
+  const response = await fetch("/api/v1/customer-intake/ai-cs/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    const errBody = await response.json().catch(() => ({}));
+    const detail = errBody.detail || "AI CS sedang tidak tersedia. Silakan coba lagi.";
+    throw new Error(detail);
+  }
+  return response.json();
+}
+
+function appendChatMessage(role, text) {
+  if (!aiCsMessages) {
+    return;
+  }
+  const bubble = document.createElement("div");
+  bubble.className = role === "user" ? "ai-cs-message user" : "ai-cs-message ai";
+  bubble.textContent = text;
+  aiCsMessages.appendChild(bubble);
+  aiCsMessages.scrollTop = aiCsMessages.scrollHeight;
 }
 
 if (form && statusEl) {
@@ -60,12 +94,54 @@ if (form && statusEl) {
     try {
       await submitForm(payload);
       statusEl.textContent =
-        "Permintaan berhasil dikirim. Tim kami akan menghubungi Anda secepatnya.";
+        "Permintaan berhasil dikirim. AI workflow onboarding telah aktif dan siap diproses.";
       statusEl.className = "form-status success";
       form.reset();
     } catch (error) {
       statusEl.textContent = error.message;
       statusEl.className = "form-status error";
+    }
+  });
+}
+
+if (aiCsForm && aiCsStatusEl && aiCsInput) {
+  aiCsForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const message = String(aiCsInput.value || "").trim();
+    if (!message) {
+      aiCsStatusEl.textContent = "Tulis pesan terlebih dahulu.";
+      aiCsStatusEl.className = "form-status error";
+      return;
+    }
+
+    appendChatMessage("user", message);
+    aiCsStatusEl.textContent = "AI CS sedang menyusun jawaban...";
+    aiCsStatusEl.className = "form-status";
+
+    try {
+      const response = await submitAiCs({
+        message,
+        customer_name: String(aiCsCustomerName?.value || "").trim() || null,
+        business_name: String(aiCsBusinessName?.value || "").trim() || null,
+        email: String(aiCsEmail?.value || "").trim() || null,
+        source: "synapsetech.my.id",
+      });
+
+      let aiReply = response.reply;
+      if (Array.isArray(response.suggested_actions) && response.suggested_actions.length > 0) {
+        const numbered = response.suggested_actions
+          .map((item, index) => `${index + 1}. ${item}`)
+          .join("\n");
+        aiReply += `\n\nLangkah yang disarankan:\n${numbered}`;
+      }
+      appendChatMessage("ai", aiReply);
+      aiCsStatusEl.textContent = "Jawaban AI CS diterima.";
+      aiCsStatusEl.className = "form-status success";
+      aiCsInput.value = "";
+      aiCsInput.focus();
+    } catch (error) {
+      aiCsStatusEl.textContent = error.message;
+      aiCsStatusEl.className = "form-status error";
     }
   });
 }

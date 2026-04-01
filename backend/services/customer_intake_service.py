@@ -36,6 +36,61 @@ def _derive_objective_from_kpi(primary_kpi: str) -> str:
     return mapping.get(key, "increase sales leads")
 
 
+def generate_ai_cs_reply(
+    *,
+    message: str,
+    customer_name: str | None = None,
+    business_name: str | None = None,
+) -> tuple[str, list[str], str, bool]:
+    text = (message or "").strip()
+    lowered = text.lower()
+    chosen_plan = "growth"
+    actions = [
+        "Isi form intake lengkap agar AI Engine dapat membuat rencana otomatis.",
+        "Lakukan pembayaran untuk aktivasi engine.",
+        "Setelah status pembayaran terkonfirmasi, klik 'Kerjakan' di owner dashboard.",
+    ]
+
+    if any(word in lowered for word in ("enterprise", "besar", "multi branch", "b2b")):
+        chosen_plan = "enterprise"
+    elif any(word in lowered for word in ("starter", "uji coba", "coba dulu")):
+        chosen_plan = "starter"
+    elif any(word in lowered for word in ("pro", "scale", "scaling")):
+        chosen_plan = "pro"
+
+    if any(word in lowered for word in ("harga", "biaya", "price", "pricing")):
+        topic_reply = (
+            "Model layanan kami berbasis paket (Starter, Growth, Pro, Enterprise) dan aktivasi "
+            "langsung mengunci mode operasi otonom end-to-end setelah pembayaran masuk."
+        )
+    elif any(word in lowered for word in ("cara kerja", "workflow", "proses", "otomatis")):
+        topic_reply = (
+            "Alur kerjanya: intake -> pembayaran -> klik 'Kerjakan' -> engine otomatis membuat "
+            "rencana, scraping, eksperimen konten, scoring leads, dan rekomendasi iterasi."
+        )
+    elif any(word in lowered for word in ("midtrans", "payment", "bayar", "ewallet")):
+        topic_reply = (
+            "Pembayaran didukung gateway (mis. Midtrans). Notifikasi webhook mengubah status "
+            "menjadi paid secara otomatis agar owner cukup lanjut klik 'Kerjakan'."
+        )
+    else:
+        topic_reply = (
+            "AI CS siap membantu proses onboarding layanan otonom SynapseTech, termasuk pemilihan "
+            "paket dan langkah aktivasi engine tanpa proses manual berulang."
+        )
+
+    greeting_name = (customer_name or "").strip() or "Anda"
+    context = ""
+    if business_name and business_name.strip():
+        context = f" untuk bisnis {business_name.strip()}"
+    reply = (
+        f"Halo {greeting_name}, terima kasih sudah menghubungi AI CS SynapseTech{context}. "
+        f"{topic_reply} Rekomendasi awal kami: paket {chosen_plan.capitalize()}."
+    )
+
+    return reply, actions, chosen_plan, False
+
+
 def create_customer_intake(db: Session, payload: CustomerIntakeCreate) -> CustomerIntake:
     row = CustomerIntake(
         full_name=payload.full_name,

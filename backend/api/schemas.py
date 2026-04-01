@@ -245,6 +245,21 @@ class CustomerEngineStartResponse(BaseModel):
     plan: dict
 
 
+class CustomerAiCsChatRequest(BaseModel):
+    message: str = Field(min_length=1, max_length=2000)
+    customer_name: str | None = Field(default=None, max_length=120)
+    business_name: str | None = Field(default=None, max_length=180)
+    email: EmailStr | None = None
+    source: str = Field(default="website", min_length=2, max_length=120)
+
+
+class CustomerAiCsChatResponse(BaseModel):
+    reply: str
+    suggested_actions: list[str] = Field(default_factory=list)
+    suggested_plan: str = Field(default="growth")
+    handoff_required: bool = False
+
+
 class ViralExperimentCreateRequest(BaseModel):
     user_id: int
     video_id: int | None = None

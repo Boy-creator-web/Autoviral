@@ -65,8 +65,8 @@
         <div class="container">
           <h2>Request Demo / Konsultasi</h2>
           <p class="subtitle">
-            Isi data berikut. Tim SynapseTech akan mengonfigurasi mode operasi yang paling sesuai dengan
-            target bisnis Anda.
+            Isi data berikut untuk mengaktifkan workflow AI onboarding. Semua komunikasi awal ditangani
+            oleh AI CS SynapseTech.
           </p>
 
           <form id="intakeForm" class="form">
@@ -287,6 +287,69 @@
             <button type="submit" class="btn btn-primary">Kirim Permintaan</button>
             <p id="formStatus" class="form-status" aria-live="polite"></p>
           </form>
+        </div>
+      </section>
+
+      <section class="section section-dark" id="ai-cs">
+        <div class="container">
+          <h2>AI CS SynapseTech (24/7)</h2>
+          <p class="subtitle">
+            Platform ini full autonomous. Tidak ada layanan bantuan cepat via WhatsApp. Gunakan AI CS
+            berikut untuk tanya paket, alur pembayaran, dan aktivasi engine.
+          </p>
+
+          <div class="ai-cs-widget">
+            <div id="aiCsMessages" class="ai-cs-messages" aria-live="polite">
+              <div class="ai-cs-message ai">
+                Halo, saya AI CS SynapseTech. Ceritakan kebutuhan bisnis Anda untuk rekomendasi paket
+                dan langkah aktivasi engine otonom.
+              </div>
+            </div>
+            <form id="aiCsForm" class="ai-cs-form">
+              <div class="form-grid">
+                <label>
+                  Nama
+                  <input
+                    id="aiCsCustomerName"
+                    name="customer_name"
+                    maxlength="120"
+                    placeholder="Contoh: Budi Santoso"
+                  />
+                </label>
+                <label>
+                  Nama Bisnis
+                  <input
+                    id="aiCsBusinessName"
+                    name="business_name"
+                    maxlength="180"
+                    placeholder="Contoh: PT Maju Jaya Abadi"
+                  />
+                </label>
+                <label>
+                  Email
+                  <input
+                    id="aiCsEmail"
+                    name="email"
+                    type="email"
+                    maxlength="255"
+                    placeholder="Contoh: budi@bisnisanda.com"
+                  />
+                </label>
+              </div>
+              <label>
+                Pesan ke AI CS
+                <textarea
+                  id="aiCsInput"
+                  name="message"
+                  required
+                  maxlength="2000"
+                  placeholder="Contoh: Saya ingin tahu alur dari pembayaran sampai engine jalan otomatis."
+                ></textarea>
+              </label>
+              <button type="submit" class="btn btn-primary">Kirim ke AI CS</button>
+              <p id="aiCsStatus" class="form-status" aria-live="polite"></p>
+            </form>
+          </div>
         </div>
       </section>
     </main>
