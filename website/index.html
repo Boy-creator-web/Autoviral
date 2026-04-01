@@ -118,6 +118,122 @@
                 />
               </label>
               <label>
+                Nama Produk / Layanan Utama
+                <input
+                  name="product_name"
+                  required
+                  maxlength="180"
+                  placeholder="Contoh: Paket Facial Brightening / Kursus Public Speaking"
+                />
+              </label>
+              <label>
+                Kategori Produk
+                <input
+                  name="product_category"
+                  required
+                  maxlength="120"
+                  placeholder="Contoh: Beauty, Edukasi, Konsultan, SaaS"
+                />
+              </label>
+              <label>
+                Rentang Harga Produk
+                <input
+                  name="product_price_range"
+                  required
+                  maxlength="120"
+                  placeholder="Contoh: Rp300.000 - Rp1.500.000"
+                />
+              </label>
+              <label>
+                Model Bisnis
+                <select name="business_model" required>
+                  <option value="b2c">B2C</option>
+                  <option value="b2b">B2B</option>
+                  <option value="hybrid">Hybrid B2B + B2C</option>
+                </select>
+              </label>
+              <label>
+                Region Target Utama
+                <input
+                  name="target_region"
+                  required
+                  maxlength="120"
+                  placeholder="Contoh: Jabodetabek / Indonesia / SEA"
+                />
+              </label>
+              <label>
+                Channel Konten Utama
+                <input
+                  name="main_platforms"
+                  required
+                  maxlength="255"
+                  placeholder="Contoh: TikTok, Instagram Reels, YouTube Shorts"
+                />
+              </label>
+              <label>
+                KPI Prioritas
+                <select name="primary_kpi" required>
+                  <option value="qualified_leads">Qualified Leads</option>
+                  <option value="sales_conversion">Sales Conversion</option>
+                  <option value="revenue_growth">Revenue Growth</option>
+                  <option value="cac_efficiency">CAC Efficiency</option>
+                </select>
+              </label>
+              <label>
+                Leads Saat Ini / Bulan
+                <input
+                  name="current_monthly_leads"
+                  type="number"
+                  required
+                  min="0"
+                  step="1"
+                  placeholder="Contoh: 120"
+                />
+              </label>
+              <label>
+                Conversion Rate Saat Ini (%)
+                <input
+                  name="current_conversion_rate_percent"
+                  type="number"
+                  required
+                  min="0"
+                  max="100"
+                  step="0.1"
+                  placeholder="Contoh: 4.5"
+                />
+              </label>
+              <label>
+                Sales Cycle (hari)
+                <input
+                  name="sales_cycle_days"
+                  type="number"
+                  required
+                  min="0"
+                  step="1"
+                  placeholder="Contoh: 14"
+                />
+              </label>
+              <label>
+                Budget Marketing / Bulan (IDR)
+                <input
+                  name="monthly_marketing_budget"
+                  type="number"
+                  required
+                  min="0"
+                  step="100000"
+                  placeholder="Contoh: 25000000"
+                />
+              </label>
+              <label>
+                Waktu Preferensi untuk Dihubungi
+                <input
+                  name="preferred_contact_time"
+                  required
+                  maxlength="120"
+                  placeholder="Contoh: Senin-Jumat, 09.00-17.00 WIB"
+                />
+              </label>
+              <label>
                 Omset Target Bulanan (IDR)
                 <input
                   name="monthly_revenue_target"
@@ -137,6 +253,16 @@
                 </select>
               </label>
             </div>
+
+            <label>
+              Profil Customer Ideal (ICP)
+              <textarea
+                name="target_customer_profile"
+                required
+                maxlength="2000"
+                placeholder="Contoh: Wanita 24-35, tinggal di kota besar, concern skincare premium, sudah pernah membeli produk kecantikan online."
+              ></textarea>
+            </label>
 
             <label>
               Pain Point Utama

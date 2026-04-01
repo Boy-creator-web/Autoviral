@@ -158,6 +158,19 @@ class CustomerIntakeCreate(BaseModel):
     phone: str = Field(min_length=5, max_length=32)
     business_name: str = Field(min_length=1, max_length=180)
     niche: str = Field(min_length=1, max_length=150)
+    product_name: str = Field(min_length=1, max_length=180)
+    product_category: str = Field(min_length=1, max_length=120)
+    product_price_range: str = Field(min_length=1, max_length=120)
+    business_model: str = Field(min_length=2, max_length=80)
+    target_customer_profile: str = Field(min_length=1, max_length=2000)
+    target_region: str = Field(min_length=1, max_length=120)
+    main_platforms: str = Field(min_length=1, max_length=255)
+    primary_kpi: str = Field(min_length=1, max_length=120)
+    current_monthly_leads: int = Field(default=0, ge=0)
+    current_conversion_rate_percent: float = Field(default=0.0, ge=0, le=100)
+    sales_cycle_days: int = Field(default=0, ge=0)
+    monthly_marketing_budget: float = Field(default=0.0, ge=0)
+    preferred_contact_time: str = Field(min_length=2, max_length=120)
     monthly_revenue_target: float = Field(default=0.0, ge=0)
     preferred_plan: str = Field(default="starter", min_length=2, max_length=50)
     pain_point: str = Field(min_length=1, max_length=2000)
@@ -174,6 +187,19 @@ class CustomerIntakeRead(BaseModel):
     phone: str
     business_name: str
     niche: str
+    product_name: str
+    product_category: str
+    product_price_range: str
+    business_model: str
+    target_customer_profile: str
+    target_region: str
+    main_platforms: str
+    primary_kpi: str
+    current_monthly_leads: int
+    current_conversion_rate_percent: float
+    sales_cycle_days: int
+    monthly_marketing_budget: float
+    preferred_contact_time: str
     monthly_revenue_target: float
     preferred_plan: str
     pain_point: str
