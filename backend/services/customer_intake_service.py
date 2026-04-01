@@ -3,6 +3,34 @@ from sqlalchemy.orm import Session
 
 from api.schemas import CustomerIntakeCreate
 from models.customer_intake import CustomerIntake
+from models.user import User
+from services.autonomous_orchestrator_service import bootstrap_daily_mode
+from services.user_service import create_user
+
+
+class _UserPayload:
+    def __init__(self, *, email: str, password: str, name: str) -> None:
+        self.email = email
+        self.password = password
+        self.name = name
+
+
+def _safe_username_from_full_name(full_name: str) -> str:
+    tokens = [part for part in full_name.strip().split() if part]
+    if not tokens:
+        return "Client"
+    return " ".join(tokens[:2])[:255]
+
+
+def _derive_objective_from_kpi(primary_kpi: str) -> str:
+    mapping = {
+        "qualified_leads": "increase qualified leads",
+        "sales_conversion": "increase sales conversion",
+        "revenue_growth": "increase revenue growth",
+        "cac_efficiency": "improve CAC efficiency",
+    }
+    key = (primary_kpi or "").strip().lower()
+    return mapping.get(key, "increase sales leads")
 
 
 def create_customer_intake(db: Session, payload: CustomerIntakeCreate) -> CustomerIntake:
@@ -43,3 +71,88 @@ def list_customer_intakes(db: Session, status: str | None = None) -> list[Custom
     if status:
         statement = statement.where(CustomerIntake.status == status)
     return list(db.scalars(statement).all())
+
+
+def get_customer_intake(db: Session, *, intake_id: int) -> CustomerIntake:
+    row = db.get(CustomerIntake, intake_id)
+    if row is None:
+        raise ValueError("Customer intake not found")
+    return row
+
+
+def confirm_customer_payment(
+    db: Session,
+    *,
+    intake_id: int,
+    payment_reference: str,
+    payment_method: str,
+    payment_amount: float,
+) -> CustomerIntake:
+    row = get_customer_intake(db, intake_id=intake_id)
+    row.mark_payment_received(
+        reference=payment_reference,
+        method=payment_method,
+        amount=payment_amount,
+    )
+    row.status = "payment_confirmed"
+    db.commit()
+    db.refresh(row)
+    return row
+
+
+def _user_for_intake(db: Session, intake: CustomerIntake):
+    existing = db.scalar(select(User).where(User.email == intake.email))
+    if existing is not None:
+        return existing
+    return create_user(
+        db,
+        payload=_UserPayload(
+            email=intake.email,
+            password="TempPass#12345",
+            name=_safe_username_from_full_name(intake.full_name),
+        ),
+    )
+
+
+def start_engine_for_intake(
+    db: Session,
+    *,
+    intake_id: int,
+    started_by: str,
+    interval_minutes: int,
+    plan_name: str,
+    run_now: bool,
+) -> tuple[CustomerIntake, object | None, object]:
+    intake = get_customer_intake(db, intake_id=intake_id)
+    if intake.payment_status != "paid":
+        raise ValueError("Payment is not confirmed yet for this intake")
+
+    user = _user_for_intake(db, intake)
+    plan, run, _ = bootstrap_daily_mode(
+        db=db,
+        user_id=user.id,
+        video_id=None,
+        niche=intake.niche,
+        audience=intake.target_customer_profile[:200],
+        objective=intake.primary_kpi,
+        problem_angle=intake.pain_point[:255],
+        offer=f"{intake.product_name} | {intake.product_price_range}",
+        platform=intake.main_platforms.split(",")[0].strip().lower() if intake.main_platforms else "tiktok",
+        region=intake.target_region[:100],
+        interval_minutes=interval_minutes,
+        plan_name=plan_name,
+        seed_text=f"{intake.product_name} {intake.niche}",
+        leads_count=max(1, min(20, intake.current_monthly_leads // 20 if intake.current_monthly_leads else 8)),
+        variants_count=3,
+        run_now=run_now,
+    )
+
+    intake.mark_engine_started(
+        plan_id=plan.id,
+        run_id=run.id if run else None,
+        started_by=started_by,
+    )
+    intake.status = "engine_started"
+    db.commit()
+    db.refresh(intake)
+    return intake, run, plan

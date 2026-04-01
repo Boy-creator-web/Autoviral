@@ -205,6 +205,16 @@ class CustomerIntakeRead(BaseModel):
     pain_point: str
     desired_outcome: str
     source: str
+    payment_status: str
+    payment_reference: str | None = None
+    payment_method: str | None = None
+    payment_amount: float
+    payment_confirmed_at: datetime | None = None
+    engine_status: str
+    engine_plan_id: int | None = None
+    engine_last_run_id: int | None = None
+    engine_started_at: datetime | None = None
+    engine_started_by: str | None = None
     status: str
     created_at: datetime
 
@@ -212,6 +222,27 @@ class CustomerIntakeRead(BaseModel):
 class CustomerIntakeListResponse(BaseModel):
     count: int
     items: list[CustomerIntakeRead]
+
+
+class CustomerPaymentConfirmRequest(BaseModel):
+    intake_id: int
+    payment_reference: str = Field(min_length=3, max_length=120)
+    payment_method: str = Field(default="midtrans", min_length=2, max_length=80)
+    payment_amount: float = Field(ge=0)
+
+
+class CustomerEngineStartRequest(BaseModel):
+    intake_id: int
+    started_by: str = Field(default="owner", min_length=2, max_length=120)
+    interval_minutes: int = Field(default=1440, ge=15, le=10_080)
+    plan_name: str = Field(default="Client Paid - Autonomous Mode", min_length=3, max_length=120)
+    run_now: bool = True
+
+
+class CustomerEngineStartResponse(BaseModel):
+    intake: CustomerIntakeRead
+    run: dict | None = None
+    plan: dict
 
 
 class ViralExperimentCreateRequest(BaseModel):
