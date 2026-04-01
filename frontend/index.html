@@ -65,6 +65,64 @@
         background: #0f2b22;
         color: #b8ffe6;
       }
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .field label {
+        color: #c9d9ff;
+        font-size: 14px;
+      }
+      .field input,
+      .field select,
+      .field textarea {
+        background: #0e1731;
+        color: var(--text);
+        border: 1px solid #29427a;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font: inherit;
+      }
+      .field textarea {
+        min-height: 88px;
+        resize: vertical;
+      }
+      .form-actions {
+        margin-top: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .hint {
+        color: #9fb0db;
+        font-size: 13px;
+      }
+      .status {
+        margin-top: 12px;
+        border-radius: 10px;
+        padding: 10px 12px;
+        border: 1px solid #2b3e72;
+        background: #101b39;
+        color: #dbe6ff;
+        white-space: pre-wrap;
+      }
+      .status.error {
+        border-color: #7a2b2b;
+        background: #2e1515;
+        color: #ffd6d6;
+      }
+      .status.success {
+        border-color: #1f5e4a;
+        background: #0f2b22;
+        color: #b8ffe6;
+      }
       footer { margin: 36px 0 18px; color: #7f91c8; font-size: 14px; }
       a.inline { color: #9ec4ff; }
     </style>
@@ -87,6 +145,57 @@
           <a class="btn btn-primary" href="/docs">Buka API Docs</a>
           <a class="btn btn-secondary" href="/api/v1/health">Cek Health</a>
         </div>
+      </section>
+
+      <section class="section">
+        <h2>Kirim Pesanan</h2>
+        <p>
+          Form ini langsung terhubung ke API Autoviral. Setelah submit, sistem akan membuat user,
+          subscription, payment, dan campaign action secara berurutan.
+        </p>
+        <form id="order-form" class="card">
+          <div class="form-grid">
+            <div class="field">
+              <label for="full_name">Nama Lengkap</label>
+              <input id="full_name" name="full_name" type="text" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" required />
+            </div>
+            <div class="field">
+              <label for="phone">No. WhatsApp</label>
+              <input id="phone" name="phone" type="text" />
+            </div>
+            <div class="field">
+              <label for="password">Password</label>
+              <input id="password" name="password" type="password" minlength="8" required />
+            </div>
+            <div class="field">
+              <label for="plan_code">Paket</label>
+              <select id="plan_code" name="plan_code" required>
+                <option value="starter">Starter</option>
+                <option value="growth">Growth</option>
+                <option value="scale">Scale</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="campaign_title">Judul Campaign</label>
+              <input id="campaign_title" name="campaign_title" type="text" required />
+            </div>
+            <div class="field" style="grid-column: 1 / -1;">
+              <label for="brief">Brief Campaign</label>
+              <textarea id="brief" name="brief" placeholder="Contoh: produk skincare untuk target usia 20-35 di IG Reels"></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button id="submit-btn" class="btn btn-primary" type="submit">Kirim Pesanan</button>
+            <span class="hint">Gunakan email baru (yang belum pernah terdaftar).</span>
+          </div>
+          <div id="order-status" class="status" role="status" aria-live="polite">
+            Siap menerima pesanan.
+          </div>
+        </form>
       </section>
 
       <section class="section">
@@ -149,5 +258,152 @@
         <a class="inline" href="/openapi.json">OpenAPI Schema</a>
       </footer>
     </div>
+    <script>
+      const form = document.getElementById("order-form");
+      const submitBtn = document.getElementById("submit-btn");
+      const statusBox = document.getElementById("order-status");
+
+      function setStatus(message, type) {
+        statusBox.textContent = message;
+        statusBox.classList.remove("error", "success");
+        if (type) statusBox.classList.add(type);
+      }
+
+      async function parseApiError(resp) {
+        try {
+          const data = await resp.json();
+          if (typeof data?.detail === "string") return data.detail;
+          return JSON.stringify(data);
+        } catch (_) {
+          return await resp.text();
+        }
+      }
+
+      async function postJson(url, body, token) {
+        const resp = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify(body),
+        });
+        if (!resp.ok) {
+          throw new Error(await parseApiError(resp));
+        }
+        return resp.json();
+      }
+
+      async function postForm(url, fields) {
+        const payload = new URLSearchParams(fields);
+        const resp = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: payload.toString(),
+        });
+        if (!resp.ok) {
+          throw new Error(await parseApiError(resp));
+        }
+        return resp.json();
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        submitBtn.disabled = true;
+        setStatus("Memproses pesanan... mohon tunggu.", "");
+
+        const values = {
+          full_name: form.full_name.value.trim(),
+          email: form.email.value.trim().toLowerCase(),
+          phone: form.phone.value.trim(),
+          password: form.password.value,
+          plan_code: form.plan_code.value,
+          campaign_title: form.campaign_title.value.trim(),
+          brief: form.brief.value.trim(),
+        };
+
+        try {
+          const user = await postJson("/api/v1/users/", {
+            full_name: values.full_name,
+            email: values.email,
+            phone: values.phone || null,
+            password: values.password,
+          });
+
+          const login = await postForm("/api/v1/auth/login", {
+            username: values.email,
+            password: values.password,
+          });
+          const token = login.access_token;
+          if (!token) {
+            throw new Error("Token login tidak diterima dari server.");
+          }
+
+          const pricingResp = await fetch("/api/v1/pricing/");
+          if (!pricingResp.ok) {
+            throw new Error(await parseApiError(pricingResp));
+          }
+          const pricing = await pricingResp.json();
+          const plan = pricing.find((item) => item.code === values.plan_code);
+          if (!plan) {
+            throw new Error("Plan tidak ditemukan.");
+          }
+
+          const subscription = await postJson(
+            "/api/v1/subscriptions/",
+            {
+              user_id: user.id,
+              plan_id: plan.id,
+              months: 1,
+            },
+            token
+          );
+
+          const payment = await postJson(
+            "/api/v1/payments/",
+            {
+              user_id: user.id,
+              subscription_id: subscription.id,
+              amount: plan.price_monthly,
+              provider: "website",
+            },
+            token
+          );
+
+          const action = await postJson(
+            "/api/v1/actions/",
+            {
+              user_id: user.id,
+              action_type: "launch_campaign",
+              title: values.campaign_title,
+              payload: JSON.stringify({
+                brief: values.brief,
+                plan_code: values.plan_code,
+                source: "landing_form",
+              }),
+            },
+            token
+          );
+
+          setStatus(
+            `Pesanan berhasil diproses.\n` +
+              `User ID: ${user.id}\n` +
+              `Subscription ID: ${subscription.id}\n` +
+              `Invoice: ${payment.invoice_no}\n` +
+              `Action ID: ${action.id}`,
+            "success"
+          );
+          form.reset();
+        } catch (err) {
+          setStatus(
+            `Pesanan gagal diproses: ${err.message}\n` +
+              `Jika email sudah pernah terdaftar, gunakan email baru atau lakukan login via /docs.`,
+            "error"
+          );
+        } finally {
+          submitBtn.disabled = false;
+        }
+      });
+    </script>
   </body>
 </html>
