@@ -41,6 +41,12 @@ check_container mirofish
 check_http "Autoviral Health" "http://127.0.0.1:8000/api/v1/health"
 check_http "MiroFish Health" "http://127.0.0.1:5001/health"
 
+if docker ps --format '{{.Names}}' | grep -qx "autoviral-celery-worker"; then
+  log "OK: container 'autoviral-celery-worker' running"
+else
+  log "WARN: container 'autoviral-celery-worker' not running (Celery async tasks disabled)"
+fi
+
 # Postiz root biasanya redirect ke /auth (307); status ini dianggap sehat.
 postiz_code="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:4007 || true)"
 if [ "${postiz_code}" = "200" ] || [ "${postiz_code}" = "301" ] || [ "${postiz_code}" = "302" ] || [ "${postiz_code}" = "307" ]; then

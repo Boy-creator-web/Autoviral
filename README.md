@@ -136,6 +136,35 @@ Base path API: `/api/v1`
 - `POST /scraper-data`
 - `GET /scraper-data`
 
+## Celery Worker (Async Queue)
+
+Celery telah disiapkan agar sinkron dengan Redis queue:
+
+- queue scraper: `SCRAPER_QUEUE_NAME` (default: `scraper_jobs`)
+- queue video: `VIDEO_QUEUE_NAME` (default: `video_render_jobs`)
+- broker/result backend: `CELERY_BROKER_URL`, `CELERY_RESULT_BACKEND`
+
+Service Docker Compose:
+
+- `backend` (API)
+- `celery-worker` (worker async)
+
+Jalankan stack:
+
+```bash
+docker compose up --build -d backend celery-worker redis postgres
+```
+
+Cek worker:
+
+```bash
+docker compose logs -f celery-worker
+```
+
+Task kesehatan Celery:
+
+- `autoviral.tasks.healthcheck`
+
 ## Menjalankan Test Otomatis
 
 Jalankan dari root proyek:
