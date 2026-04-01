@@ -53,6 +53,8 @@ async def api_key_protection(request: Request, call_next):
     if request.method.upper() == "POST" and path in {
         f"{settings.api_v1_prefix}/customer-intake",
         f"{settings.api_v1_prefix}/customer-intake/",
+        f"{settings.api_v1_prefix}/customer-intake/checkout",
+        f"{settings.api_v1_prefix}/customer-intake/checkout/",
         f"{settings.api_v1_prefix}/customer-intake/midtrans/webhook",
         f"{settings.api_v1_prefix}/customer-intake/midtrans/webhook/",
         f"{settings.api_v1_prefix}/customer-intake/ai-cs/chat",

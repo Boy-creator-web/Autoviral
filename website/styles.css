@@ -198,6 +198,46 @@ textarea {
   gap: 12px;
 }
 
+.checkout-social-head {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.checkout-social-list {
+  display: grid;
+  gap: 12px;
+}
+
+.social-account-row {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.checkout-checkbox-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkout-checkbox-inline input {
+  width: auto;
+}
+
+.btn-danger {
+  background: #61313a;
+  color: #ffe6eb;
+}
+
+.btn-danger:hover {
+  background: #7a3d49;
+}
+
 .footer {
   border-top: 1px solid var(--border);
   padding: 22px 0;

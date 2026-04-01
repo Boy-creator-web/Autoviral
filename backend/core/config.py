@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     postiz_integration_ids_json: str = (
         '{"tiktok":"","instagram":"","youtube":"","facebook":"","x":"","linkedin":""}'
     )
+    social_credentials_encryption_key: str = "autoviral-dev-encryption-key"
     midtrans_server_key: str = ""
     autonomous_scheduler_enabled: bool = False
     autonomous_scheduler_tick_seconds: int = 30

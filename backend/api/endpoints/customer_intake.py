@@ -4,6 +4,9 @@ from sqlalchemy.orm import Session
 from api.schemas import (
     CustomerAiCsChatRequest,
     CustomerAiCsChatResponse,
+    CustomerCheckoutCreateRequest,
+    CustomerCheckoutCreateResponse,
+    CustomerSocialCredentialRead,
     CustomerEngineStartRequest,
     CustomerEngineStartResponse,
     CustomerIntakeCreate,
@@ -17,7 +20,10 @@ from services.customer_intake_service import (
     confirm_customer_payment,
     create_customer_intake,
     generate_ai_cs_reply,
+    get_customer_intake,
+    list_checkout_social_credentials,
     list_customer_intakes,
+    save_checkout_social_credentials,
     start_engine_for_intake,
 )
 
@@ -76,6 +82,45 @@ def midtrans_webhook_endpoint(
         "intake_id": row.id if row else None,
         "payment_status": row.payment_status if row else None,
     }
+
+
+@router.post("/checkout", response_model=CustomerCheckoutCreateResponse)
+def create_checkout_with_social_accounts_endpoint(
+    payload: CustomerCheckoutCreateRequest,
+    db: Session = Depends(get_db),
+) -> CustomerCheckoutCreateResponse:
+    try:
+        intake, rows = save_checkout_social_credentials(
+            db=db,
+            intake_id=payload.intake_id,
+            payment_method=payload.payment_method,
+            preferred_plan=payload.preferred_plan,
+            social_accounts=payload.social_accounts,
+        )
+    except ValueError as err:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(err)) from err
+    return CustomerCheckoutCreateResponse(
+        intake=CustomerIntakeRead.model_validate(intake),
+        social_accounts_count=len(rows),
+        social_accounts=[CustomerSocialCredentialRead.model_validate(item) for item in rows],
+    )
+
+
+@router.get("/checkout/{intake_id}", response_model=CustomerCheckoutCreateResponse)
+def get_checkout_social_accounts_endpoint(
+    intake_id: int,
+    db: Session = Depends(get_db),
+) -> CustomerCheckoutCreateResponse:
+    try:
+        intake = get_customer_intake(db=db, intake_id=intake_id)
+        rows = list_checkout_social_credentials(db=db, intake_id=intake_id)
+    except ValueError as err:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(err)) from err
+    return CustomerCheckoutCreateResponse(
+        intake=CustomerIntakeRead.model_validate(intake),
+        social_accounts_count=len(rows),
+        social_accounts=[CustomerSocialCredentialRead.model_validate(item) for item in rows],
+    )
 
 
 @router.post("/ai-cs/chat", response_model=CustomerAiCsChatResponse)

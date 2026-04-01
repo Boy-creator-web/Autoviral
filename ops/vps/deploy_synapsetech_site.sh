@@ -26,8 +26,10 @@ fi
 echo "[2/6] Preparing static site files..."
 mkdir -p "${SITE_ROOT}"
 cp -f "${REPO_ROOT}/website/index.html" "${SITE_ROOT}/index.html"
+cp -f "${REPO_ROOT}/website/checkout.html" "${SITE_ROOT}/checkout.html"
 cp -f "${REPO_ROOT}/website/styles.css" "${SITE_ROOT}/styles.css"
 cp -f "${REPO_ROOT}/website/script.js" "${SITE_ROOT}/script.js"
+cp -f "${REPO_ROOT}/website/checkout.js" "${SITE_ROOT}/checkout.js"
 
 echo "[3/6] Writing Nginx site config..."
 cat >/etc/nginx/sites-available/synapsetech-my-id.conf <<EOF

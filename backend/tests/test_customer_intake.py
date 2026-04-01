@@ -211,3 +211,70 @@ def test_ai_cs_chat_endpoint(client):
     assert payload["handoff_required"] is False
     assert payload["suggested_plan"] in {"starter", "growth", "pro", "enterprise"}
     assert len(payload["suggested_actions"]) >= 1
+
+
+def test_checkout_stores_social_credentials(client):
+    create_resp = client.post(
+        "/api/v1/customer-intake/",
+        json={
+            "full_name": "Sari Putri",
+            "email": "sari@brand.id",
+            "phone": "+6281333344455",
+            "business_name": "Sari Brand",
+            "niche": "beauty",
+            "product_name": "Serum Glow",
+            "product_category": "Skincare",
+            "product_price_range": "Rp150.000 - Rp350.000",
+            "business_model": "b2c",
+            "target_customer_profile": "Wanita 20-35, aktif belanja online",
+            "target_region": "Indonesia",
+            "main_platforms": "Instagram, TikTok",
+            "primary_kpi": "sales_conversion",
+            "current_monthly_leads": 100,
+            "current_conversion_rate_percent": 3.2,
+            "sales_cycle_days": 7,
+            "monthly_marketing_budget": 12000000,
+            "preferred_contact_time": "Senin-Jumat 09.00-18.00",
+            "monthly_revenue_target": 100000000,
+            "preferred_plan": "growth",
+            "pain_point": "Akun sosial aktif tapi closing kurang stabil.",
+            "desired_outcome": "Leads dan conversion naik konsisten.",
+            "source": "synapsetech.my.id",
+        },
+    )
+    assert create_resp.status_code == 201
+    intake_id = create_resp.json()["id"]
+
+    checkout_resp = client.post(
+        "/api/v1/customer-intake/checkout",
+        json={
+            "intake_id": intake_id,
+            "payment_method": "midtrans",
+            "preferred_plan": "pro",
+            "social_accounts": [
+                {
+                    "platform": "instagram",
+                    "username": "@saribrand",
+                    "password": "ig-secret-pass",
+                    "autopost_enabled": True,
+                },
+                {
+                    "platform": "tiktok",
+                    "username": "@saribrand.id",
+                    "password": "tt-secret-pass",
+                    "autopost_enabled": True,
+                },
+            ],
+        },
+    )
+    assert checkout_resp.status_code == 200
+    payload = checkout_resp.json()
+    assert payload["intake"]["id"] == intake_id
+    assert payload["intake"]["preferred_plan"] == "pro"
+    assert payload["social_accounts_count"] == 2
+    assert {item["platform"] for item in payload["social_accounts"]} == {"instagram", "tiktok"}
+
+    get_resp = client.get(f"/api/v1/customer-intake/checkout/{intake_id}")
+    assert get_resp.status_code == 200
+    fetched = get_resp.json()
+    assert fetched["social_accounts_count"] >= 2

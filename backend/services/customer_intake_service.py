@@ -3,11 +3,13 @@ import hashlib
 from sqlalchemy import Select, select
 from sqlalchemy.orm import Session
 
-from api.schemas import CustomerIntakeCreate
+from api.schemas import CustomerIntakeCreate, CustomerSocialCredentialInput
 from core.config import settings
 from models.customer_intake import CustomerIntake
+from models.customer_social_credential import CustomerSocialCredential
 from models.user import User
 from services.autonomous_orchestrator_service import bootstrap_daily_mode
+from services.credential_crypto_service import encrypt_secret
 from services.user_service import create_user
 
 
@@ -122,6 +124,81 @@ def create_customer_intake(db: Session, payload: CustomerIntakeCreate) -> Custom
     db.commit()
     db.refresh(row)
     return row
+
+
+def save_checkout_social_credentials(
+    db: Session,
+    *,
+    intake_id: int,
+    payment_method: str,
+    preferred_plan: str,
+    social_accounts: list[CustomerSocialCredentialInput],
+) -> tuple[CustomerIntake, list[CustomerSocialCredential]]:
+    intake = get_customer_intake(db, intake_id=intake_id)
+    intake.preferred_plan = preferred_plan
+    if intake.payment_method is None:
+        intake.payment_method = payment_method
+
+    existing_accounts = list(
+        db.scalars(
+            select(CustomerSocialCredential).where(CustomerSocialCredential.intake_id == intake_id)
+        ).all()
+    )
+    existing_index = {
+        (row.platform.strip().lower(), row.username.strip().lower()): row for row in existing_accounts
+    }
+    touched_ids: set[int] = set()
+
+    for item in social_accounts:
+        platform = item.platform.strip().lower()
+        username = item.username.strip()
+        key = (platform, username.lower())
+        encrypted = encrypt_secret(item.password)
+        current = existing_index.get(key)
+        if current is not None:
+            current.encrypted_password = encrypted
+            current.autopost_enabled = item.autopost_enabled
+            touched_ids.add(current.id)
+            continue
+
+        row = CustomerSocialCredential(
+            intake_id=intake_id,
+            platform=platform,
+            username=username,
+            encrypted_password=encrypted,
+            autopost_enabled=item.autopost_enabled,
+        )
+        db.add(row)
+        db.flush()
+        touched_ids.add(row.id)
+
+    db.commit()
+    db.refresh(intake)
+
+    rows = list(
+        db.scalars(
+            select(CustomerSocialCredential)
+            .where(CustomerSocialCredential.intake_id == intake_id)
+            .order_by(CustomerSocialCredential.id.asc())
+        ).all()
+    )
+    filtered = [row for row in rows if row.id in touched_ids]
+    return intake, filtered
+
+
+def list_checkout_social_credentials(
+    db: Session,
+    *,
+    intake_id: int,
+) -> list[CustomerSocialCredential]:
+    _ = get_customer_intake(db, intake_id=intake_id)
+    return list(
+        db.scalars(
+            select(CustomerSocialCredential)
+            .where(CustomerSocialCredential.intake_id == intake_id)
+            .order_by(CustomerSocialCredential.id.asc())
+        ).all()
+    )
 
 
 def list_customer_intakes(db: Session, status: str | None = None) -> list[CustomerIntake]:

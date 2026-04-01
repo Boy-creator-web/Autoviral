@@ -21,6 +21,7 @@ def init_db() -> None:
         autonomous_plan,
         autonomous_run,
         customer_intake,
+        customer_social_credential,
         scraper_data,
         sales_lead,
         synthetic_human,

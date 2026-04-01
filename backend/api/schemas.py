@@ -245,6 +245,35 @@ class CustomerEngineStartResponse(BaseModel):
     plan: dict
 
 
+class CustomerSocialCredentialInput(BaseModel):
+    platform: str = Field(min_length=2, max_length=50)
+    username: str = Field(min_length=1, max_length=255)
+    password: str = Field(min_length=1, max_length=255)
+    autopost_enabled: bool = True
+
+
+class CustomerSocialCredentialRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    platform: str
+    username: str
+    autopost_enabled: bool
+    created_at: datetime
+
+
+class CustomerCheckoutCreateRequest(BaseModel):
+    intake_id: int
+    payment_method: str = Field(default="midtrans", min_length=2, max_length=80)
+    preferred_plan: str = Field(default="growth", min_length=2, max_length=50)
+    social_accounts: list[CustomerSocialCredentialInput] = Field(min_length=1, max_length=12)
+
+
+class CustomerCheckoutCreateResponse(BaseModel):
+    intake: CustomerIntakeRead
+    social_accounts_count: int
+    social_accounts: list[CustomerSocialCredentialRead]
+
+
 class CustomerAiCsChatRequest(BaseModel):
     message: str = Field(min_length=1, max_length=2000)
     customer_name: str | None = Field(default=None, max_length=120)

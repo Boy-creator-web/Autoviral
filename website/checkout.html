@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SynapseTech Checkout | Social Account Setup</title>
+    <meta
+      name="description"
+      content="Checkout SynapseTech untuk aktivasi engine dan input akun media sosial untuk kebutuhan autoposting."
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="container">
+        <p class="eyebrow">synapsetech.my.id / checkout</p>
+        <h1>Checkout & Setup Akun Media Sosial</h1>
+        <p class="subtitle">
+          Masukkan data akun sosial (platform, username, password) agar engine dapat menyimpan
+          konfigurasi untuk kebutuhan autoposting saat fitur diaktifkan.
+        </p>
+      </div>
+    </header>
+
+    <main>
+      <section class="section">
+        <div class="container">
+          <h2>Data Checkout</h2>
+          <form id="checkoutForm" class="form">
+            <div class="form-grid">
+              <label>
+                Intake ID
+                <input
+                  name="intake_id"
+                  type="number"
+                  min="1"
+                  required
+                  placeholder="Contoh: 12"
+                />
+              </label>
+              <label>
+                Metode Pembayaran
+                <select name="payment_method" required>
+                  <option value="midtrans">Midtrans</option>
+                  <option value="bank_transfer">Bank Transfer</option>
+                  <option value="manual">Manual</option>
+                </select>
+              </label>
+              <label>
+                Paket
+                <select name="preferred_plan" required>
+                  <option value="starter">Starter</option>
+                  <option value="growth">Growth</option>
+                  <option value="pro">Pro</option>
+                  <option value="enterprise">Enterprise</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="checkout-social-head">
+              <h3>Akun Media Sosial untuk Autoposting</h3>
+              <button type="button" id="addSocialRowBtn" class="btn">+ Tambah Akun</button>
+            </div>
+
+            <div id="socialAccountsContainer" class="checkout-social-list"></div>
+
+            <button type="submit" class="btn btn-primary">Simpan Checkout</button>
+            <p id="checkoutStatus" class="form-status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>© <span id="year"></span> SynapseTech. Autonomous growth systems for serious businesses.</p>
+      </div>
+    </footer>
+
+    <script src="/checkout.js"></script>
+  </body>
+</html>

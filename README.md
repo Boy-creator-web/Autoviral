@@ -232,6 +232,17 @@ POST /api/v1/customer-intake/
 Endpoint terkait:
 - `POST /api/v1/customer-intake/`
 - `GET /api/v1/customer-intake/`
+- `POST /api/v1/customer-intake/checkout` (simpan akun sosial untuk autoposting)
+- `GET /api/v1/customer-intake/checkout/{intake_id}` (lihat akun sosial tersimpan)
+
+Halaman checkout tersedia di:
+
+```bash
+https://synapsetech.my.id/checkout.html
+```
+
+Input checkout mencakup akun media sosial (platform, username, password, autopost toggle).
+Password disimpan terenkripsi di backend, agar siap dipakai engine saat modul autoposting diaktifkan.
 
 Deploy domain + SSL di VPS:
 - gunakan `ops/vps/deploy_synapsetech_site.sh`
