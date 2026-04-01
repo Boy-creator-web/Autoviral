@@ -6,36 +6,45 @@
     <title>Harga Paket | Autoviral</title>
     <meta
       name="description"
-      content="Bandingkan harga dan fitur paket Starter, Growth, dan Scale Autoviral secara transparan."
+      content="Bandingkan paket Starter, Growth, Scale, dan Enterprise Autoviral secara transparan."
     />
-    <link rel="stylesheet" href="/styles.css?v=20260401-pro" />
+    <link rel="stylesheet" href="/styles.css?v=enterprise2" />
   </head>
   <body>
-    <header class="nav">
-      <div class="container nav-inner">
-        <a class="brand" href="/">Autoviral</a>
-        <nav class="menu">
+    <header class="site-header">
+      <div class="container nav">
+        <a href="/" class="brand">Autoviral</a>
+        <button class="menu-toggle" data-nav-toggle aria-expanded="false" aria-label="Buka menu">Menu</button>
+        <nav class="menu" data-nav>
           <a href="/">Home</a>
-          <a href="/pricing.html" aria-current="page">Harga</a>
+          <a href="/pricing.html" class="active">Harga</a>
           <a href="/solutions.html">Solusi</a>
+          <a href="/enterprise.html">Enterprise</a>
           <a href="/faq.html">FAQ</a>
-          <a href="/contact.html">Konsultasi</a>
-          <a class="btn btn-sm btn-primary" href="/checkout.html">Mulai</a>
+          <a class="btn btn-primary" href="/checkout.html">Mulai</a>
         </nav>
       </div>
     </header>
 
-    <main class="section">
-      <div class="container">
-        <h1>Pilih Paket Sesuai Tahap Bisnis Anda</h1>
-        <p class="lead">
-          Semua paket termasuk onboarding, support implementasi, dan dashboard performa.
-        </p>
+    <main>
+      <section class="hero compact">
+        <div class="container">
+          <h1>Pilih Paket yang Paling Sesuai</h1>
+          <p class="lead">
+            Transparan harga, fitur, dan limit penggunaan. Tidak perlu bicara dengan sales untuk mulai.
+          </p>
+        </div>
+      </section>
 
-        <div id="pricing-grid" class="grid grid-3"></div>
+      <section class="section">
+        <div class="container">
+          <div id="pricing-grid" class="grid grid-3"></div>
+        </div>
+      </section>
 
-        <section class="section section-narrow">
-          <h2>Perbandingan Fitur Utama</h2>
+      <section class="section section-soft">
+        <div class="container">
+          <h2>Perbandingan Cepat</h2>
           <div class="table-wrap">
             <table class="table">
               <thead>
@@ -44,52 +53,61 @@
                   <th>Starter</th>
                   <th>Growth</th>
                   <th>Scale</th>
+                  <th>Enterprise</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Video Factory</td>
-                  <td>20 / bulan</td>
-                  <td>80 / bulan</td>
-                  <td>300 / bulan</td>
+                  <td>Video / bulan</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>300</td>
+                  <td>Custom</td>
                 </tr>
                 <tr>
-                  <td>Campaign Action</td>
-                  <td>5 / bulan</td>
-                  <td>20 / bulan</td>
-                  <td>80 / bulan</td>
+                  <td>Campaign / bulan</td>
+                  <td>5</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>Custom</td>
                 </tr>
                 <tr>
-                  <td>Scraper Insight</td>
-                  <td>50 / bulan</td>
-                  <td>250 / bulan</td>
-                  <td>1000 / bulan</td>
+                  <td>Scraper insight</td>
+                  <td>50</td>
+                  <td>250</td>
+                  <td>1000</td>
+                  <td>Custom</td>
                 </tr>
                 <tr>
-                  <td>SLA Support</td>
-                  <td>Email</td>
-                  <td>Email + WA</td>
-                  <td>Priority Support</td>
+                  <td>Autonomous optimization</td>
+                  <td>Basic</td>
+                  <td>Advanced</td>
+                  <td>Advanced+</td>
+                  <td>Dedicated strategy profile</td>
                 </tr>
                 <tr>
-                  <td>Team Seat</td>
-                  <td>2 user</td>
-                  <td>10 user</td>
-                  <td>30 user</td>
+                  <td>Laporan</td>
+                  <td>Weekly</td>
+                  <td>Weekly + Monthly</td>
+                  <td>Daily + Weekly</td>
+                  <td>Custom dashboard + SLA</td>
                 </tr>
               </tbody>
             </table>
           </div>
-        </section>
-      </div>
+          <div class="cta-row" style="margin-top: 16px;">
+            <a class="btn btn-primary" href="/checkout.html">Mulai Checkout Mandiri</a>
+            <a class="btn btn-secondary" href="/enterprise.html">Lihat Enterprise</a>
+          </div>
+        </div>
+      </section>
     </main>
 
-    <footer class="footer">
-      <div class="container">© 2026 Autoviral</div>
+    <footer class="site-footer">
+      <div class="container">
+        <p>© <span data-year></span> SynapseTech · Autoviral Platform</p>
+      </div>
     </footer>
-    <script src="/site.js?v=20260401-pro"></script>
-    <script>
-      renderPricingCards("pricing-grid");
-    </script>
+    <script src="/site.js?v=enterprise2"></script>
   </body>
 </html>

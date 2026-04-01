@@ -3,29 +3,45 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Terima Kasih - SynapseTech Autoviral</title>
-    <meta name="description" content="Permintaan Anda sudah diterima. Tim SynapseTech akan segera menghubungi Anda." />
-    <link rel="stylesheet" href="/styles.css" />
+    <title>Terima Kasih | Autoviral</title>
+    <meta
+      name="description"
+      content="Terima kasih, proses Anda berhasil. Lanjutkan pemantauan hasil campaign dan report."
+    />
+    <link rel="stylesheet" href="/styles.css?v=20260401-enterprise" />
   </head>
   <body>
-    <header class="topbar">
+    <header class="site-header">
       <div class="container nav">
-        <a class="brand" href="/">SynapseTech <span>Autoviral</span></a>
+        <a class="brand" href="/">Autoviral</a>
       </div>
     </header>
-    <main class="container section">
-      <div class="card">
-        <h1>Terima kasih, data Anda sudah masuk.</h1>
-        <p class="lead">
-          Tim kami akan memproses kebutuhan Anda dan menghubungi Anda untuk sesi konfigurasi.
-        </p>
-        <p id="lead-id" class="muted"></p>
-        <div class="inline-actions">
-          <a class="btn primary" href="/pricing.html">Lihat Paket Lagi</a>
-          <a class="btn ghost" href="/checkout.html">Lanjut Checkout</a>
+
+    <main class="section">
+      <div class="container">
+        <div class="card">
+          <h1>Terima kasih, proses berhasil diproses.</h1>
+          <p class="lead">
+            Sistem autonomous sudah menerima data Anda. Selanjutnya Anda bisa langsung lanjut
+            ke dashboard flow berikutnya tanpa menunggu tim sales.
+          </p>
+          <p id="thank-you-message" class="notice success">
+            Data transaksi akan ditampilkan otomatis berdasarkan parameter URL.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="/checkout.html">Buat Transaksi Baru</a>
+            <a class="btn btn-secondary" href="/pricing.html">Lihat Paket Lagi</a>
+          </div>
         </div>
       </div>
     </main>
-    <script src="/site.js"></script>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>© <span data-year></span> Autoviral</p>
+      </div>
+    </footer>
+
+    <script src="/site.js?v=20260401-enterprise"></script>
   </body>
 </html>

@@ -3,92 +3,103 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hubungi Kami | SynapseTech Autoviral</title>
+    <title>Kontak WA | Autoviral</title>
     <meta
       name="description"
-      content="Konsultasi implementasi Autoviral untuk bisnis Anda. Kirim brief, target, dan kebutuhan tim Anda."
+      content="Butuh bantuan cepat via WhatsApp? Kirim data singkat dan tim ops kami siap bantu tanpa proses sales."
     />
-    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/styles.css?v=autonomous-v2" />
   </head>
   <body>
-    <header class="nav-wrap">
+    <header class="site-header">
       <div class="container nav">
-        <a class="brand" href="/">SynapseTech Autoviral</a>
-        <nav class="menu">
+        <a class="brand" href="/">Autoviral</a>
+        <nav class="nav-links">
           <a href="/">Home</a>
-          <a href="/solutions.html">Solusi</a>
           <a href="/pricing.html">Harga</a>
-          <a href="/checkout.html">Checkout</a>
-          <a class="active" href="/contact.html">Kontak</a>
+          <a href="/solutions.html">Solusi</a>
+          <a href="/enterprise.html">Enterprise</a>
+          <a href="/faq.html">FAQ</a>
+          <a href="/checkout.html" class="btn btn-primary">Mulai</a>
         </nav>
       </div>
     </header>
-
     <main>
-      <section class="page-head">
+      <section class="hero">
         <div class="container">
-          <h1>Konsultasi & Request Demo</h1>
-          <p>
-            Ceritakan kondisi bisnis Anda. Tim kami akan memberikan rekomendasi paket,
-            workflow, dan estimasi implementasi.
+          <p class="eyebrow">Support Channel</p>
+          <h1>Bantuan via WhatsApp</h1>
+          <p class="subtitle">
+            Jika diperlukan, Anda bisa minta bantuan setup lewat WhatsApp. Ini murni
+            channel bantuan onboarding/operasional, bukan proses sales.
           </p>
         </div>
       </section>
-
       <section class="section">
         <div class="container">
           <div class="card">
-            <form id="intakeForm" class="form-grid">
-              <label class="field">
-                Nama Lengkap
-                <input name="full_name" required maxlength="120" />
-              </label>
-              <label class="field">
-                Email Bisnis
-                <input name="email" type="email" required maxlength="255" />
-              </label>
-              <label class="field">
-                WhatsApp
-                <input name="phone" required minlength="5" maxlength="32" />
-              </label>
-              <label class="field">
-                Nama Bisnis
-                <input name="business_name" required maxlength="180" />
-              </label>
-              <label class="field">
-                Niche
-                <input name="niche" required maxlength="150" />
-              </label>
-              <label class="field">
-                Omset Target Bulanan (IDR)
-                <input name="monthly_revenue_target" type="number" min="0" step="100000" />
-              </label>
-              <label class="field">
-                Paket yang diminati
-                <select name="preferred_plan">
+            <form data-contact-form class="form-grid">
+              <div class="field">
+                <label for="full_name">Nama Lengkap</label>
+                <input id="full_name" name="full_name" required maxlength="120" />
+              </div>
+              <div class="field">
+                <label for="email">Email Bisnis</label>
+                <input id="email" name="email" type="email" required maxlength="255" />
+              </div>
+              <div class="field">
+                <label for="phone">WhatsApp</label>
+                <input id="phone" name="phone" required minlength="5" maxlength="32" />
+              </div>
+              <div class="field">
+                <label for="business_name">Nama Bisnis</label>
+                <input id="business_name" name="business_name" required maxlength="180" />
+              </div>
+              <div class="field">
+                <label for="niche">Niche</label>
+                <input id="niche" name="niche" required maxlength="150" />
+              </div>
+              <div class="field">
+                <label for="monthly_revenue_target">Target Omset Bulanan (IDR)</label>
+                <input
+                  id="monthly_revenue_target"
+                  name="monthly_revenue_target"
+                  type="number"
+                  min="0"
+                  step="100000"
+                />
+              </div>
+              <div class="field">
+                <label for="preferred_plan">Paket</label>
+                <select id="preferred_plan" name="preferred_plan">
                   <option value="starter">Starter</option>
                   <option value="growth">Growth</option>
-                  <option value="pro">Pro</option>
+                  <option value="scale">Scale</option>
                   <option value="enterprise">Enterprise</option>
                 </select>
-              </label>
-              <label class="field full">
-                Pain Point Utama
-                <textarea name="pain_point" required maxlength="2000"></textarea>
-              </label>
-              <label class="field full">
-                Outcome yang diharapkan 90 hari
-                <textarea name="desired_outcome" required maxlength="2000"></textarea>
-              </label>
-              <div class="full">
-                <button type="submit" class="btn btn-primary">Kirim Permintaan</button>
-                <p id="formStatus" class="form-status" aria-live="polite"></p>
+              </div>
+              <div class="field field-full">
+                <label for="pain_point">Kendala utama</label>
+                <textarea id="pain_point" name="pain_point" maxlength="2000" required></textarea>
+              </div>
+              <div class="field field-full">
+                <label for="desired_outcome">Outcome 90 hari</label>
+                <textarea id="desired_outcome" name="desired_outcome" maxlength="2000" required></textarea>
+              </div>
+              <div class="field field-full">
+                <button type="submit" class="btn btn-primary">Kirim Permintaan Bantuan</button>
+                <div data-contact-status class="notice"></div>
               </div>
             </form>
           </div>
         </div>
       </section>
     </main>
-    <script src="/site.js?v=20260401-business"></script>
+    <footer class="site-footer">
+      <div class="container">
+        <p>© <span data-year></span> Autoviral</p>
+      </div>
+    </footer>
+    <script src="/site.js?v=autonomous-v2"></script>
   </body>
 </html>

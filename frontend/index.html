@@ -3,22 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Autoviral by SynapseTech | Growth Engine untuk Bisnis</title>
+    <title>Autoviral | Autonomous Growth Platform</title>
     <meta
       name="description"
-      content="Website resmi Autoviral: lihat paket dan harga, pahami flow implementasi, daftar, checkout, dan jalankan campaign dengan laporan hasil terukur."
+      content="Autoviral by SynapseTech: pelanggan dapat melihat paket, memilih, membayar, menjalankan campaign, dan menerima report secara mandiri."
     />
-    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/styles.css?v=20260401-enterprise" />
   </head>
   <body>
     <header class="site-header">
       <div class="container nav">
         <a href="/" class="brand">Autoviral</a>
-        <nav class="menu">
+        <button class="menu-toggle" data-nav-toggle aria-expanded="false" aria-label="Toggle menu">
+          Menu
+        </button>
+        <nav class="menu" data-nav>
           <a href="/pricing.html">Harga</a>
           <a href="/solutions.html">Solusi</a>
+          <a href="/enterprise.html">Enterprise</a>
+          <a href="/checkout.html">Checkout</a>
           <a href="/faq.html">FAQ</a>
-          <a href="/contact.html">Konsultasi</a>
+          <a class="btn btn-sm btn-primary" href="/checkout.html">Mulai Sekarang</a>
         </nav>
       </div>
     </header>
@@ -27,28 +32,40 @@
       <section class="hero">
         <div class="container hero-grid">
           <div>
-            <p class="eyebrow">SynapseTech.my.id</p>
-            <h1>Platform Growth End-to-End untuk Bisnis Serius</h1>
-            <p>
-              Bukan sekadar landing page. Autoviral memberikan alur bisnis utuh:
-              <strong>pilih paket</strong>, <strong>pendaftaran</strong>,
-              <strong>pembayaran</strong>, <strong>eksekusi campaign</strong>,
-              hingga <strong>laporan hasil</strong>.
+            <span class="badge">100% Autonomous Flow</span>
+            <h1>Dari Lihat Paket sampai Laporan, Semua Jalan Otomatis</h1>
+            <p class="lead">
+              Tidak perlu team sales. Calon pelanggan cukup melihat detail paket, memilih plan,
+              membayar, lalu menikmati output campaign dan report periodik dari dashboard.
             </p>
-            <div class="cta">
+            <div class="cta-row">
               <a class="btn btn-primary" href="/pricing.html">Lihat Paket & Harga</a>
               <a class="btn btn-secondary" href="/checkout.html">Mulai Berlangganan</a>
             </div>
+            <div class="stats-row">
+              <div class="stat">
+                <div class="kpi">3</div>
+                <div class="kpi-label">Pilihan paket aktif</div>
+              </div>
+              <div class="stat">
+                <div class="kpi">5 langkah</div>
+                <div class="kpi-label">Flow business end-to-end</div>
+              </div>
+              <div class="stat">
+                <div class="kpi">Realtime</div>
+                <div class="kpi-label">Status pembayaran & action</div>
+              </div>
+            </div>
           </div>
+
           <aside class="card">
-            <h3>Flow Bisnis yang Kami Bangun</h3>
-            <ol class="flow">
-              <li>Prospect baca detail paket & use case</li>
-              <li>Pilih plan sesuai kapasitas bisnis</li>
-              <li>Daftar akun perusahaan</li>
-              <li>Lakukan checkout & pembayaran</li>
-              <li>Jalankan action campaign</li>
-              <li>Pantau report dan iterasi growth</li>
+            <h3>Flow Pelanggan (Autonomous)</h3>
+            <ol class="list">
+              <li>Lihat detail fitur dan harga paket.</li>
+              <li>Pilih plan paling cocok untuk target bisnis.</li>
+              <li>Isi data bisnis dan checkout mandiri.</li>
+              <li>Sistem otomatis membuat akun + subscription + payment.</li>
+              <li>Campaign berjalan, hasil dan report tersedia.</li>
             </ol>
           </aside>
         </div>
@@ -56,19 +73,19 @@
 
       <section class="section">
         <div class="container">
-          <h2>Kenapa perusahaan memilih Autoviral?</h2>
-          <div class="grid cols-3">
+          <h2>Kenapa model ini cocok untuk scale cepat?</h2>
+          <div class="grid grid-3">
             <article class="card">
-              <h3>Jelas secara komersial</h3>
-              <p>Harga, kuota, fitur, dan model paket disajikan transparan untuk keputusan cepat.</p>
+              <h3>Decision-ready</h3>
+              <p class="muted">Informasi paket dan harga lengkap sehingga keputusan dapat dibuat tanpa menunggu sales call.</p>
             </article>
             <article class="card">
-              <h3>Terukur secara operasional</h3>
-              <p>Dari subscription ke action sampai report, semuanya terhubung ke sistem yang sama.</p>
+              <h3>Checkout mandiri</h3>
+              <p class="muted">Pelanggan bisa langsung daftar, pilih paket, dan menyelesaikan pembayaran secara online.</p>
             </article>
             <article class="card">
-              <h3>Siap scale</h3>
-              <p>Arsitektur API-ready, bisa disambungkan ke tim sales, CRM, atau dashboard internal.</p>
+              <h3>Output terukur</h3>
+              <p class="muted">Setiap action menghasilkan status, hasil, dan report agar ROI campaign terlihat jelas.</p>
             </article>
           </div>
         </div>
@@ -76,38 +93,74 @@
 
       <section class="section section-soft">
         <div class="container">
-          <h2>Langkah cepat untuk mulai</h2>
-          <div class="steps">
-            <div class="step">
-              <span>1</span>
-              <div>
-                <h4>Pahami paket</h4>
-                <p>Bandingkan Starter, Growth, dan Scale di halaman harga.</p>
+          <h2>Butuh bantuan cepat via WhatsApp?</h2>
+          <p class="lead">Isi form singkat ini. Tim operasional akan bantu via WA bila diperlukan.</p>
+
+          <form class="form card" data-contact-form>
+            <div class="form-grid">
+              <div class="field">
+                <label for="full_name">Nama Lengkap</label>
+                <input id="full_name" name="full_name" required maxlength="120" />
+              </div>
+              <div class="field">
+                <label for="email">Email Bisnis</label>
+                <input id="email" name="email" type="email" required maxlength="255" />
+              </div>
+              <div class="field">
+                <label for="phone">No. WhatsApp</label>
+                <input id="phone" name="phone" required minlength="5" maxlength="32" />
+              </div>
+              <div class="field">
+                <label for="business_name">Nama Bisnis</label>
+                <input id="business_name" name="business_name" required maxlength="180" />
+              </div>
+              <div class="field">
+                <label for="niche">Niche</label>
+                <input id="niche" name="niche" required maxlength="150" />
+              </div>
+              <div class="field">
+                <label for="monthly_revenue_target">Target Omset Bulanan (IDR)</label>
+                <input
+                  id="monthly_revenue_target"
+                  name="monthly_revenue_target"
+                  type="number"
+                  min="0"
+                  step="100000"
+                />
+              </div>
+              <div class="field">
+                <label for="preferred_plan">Paket Diminati</label>
+                <select id="preferred_plan" name="preferred_plan">
+                  <option value="starter">Starter</option>
+                  <option value="growth">Growth</option>
+                  <option value="scale">Scale</option>
+                  <option value="enterprise">Enterprise</option>
+                </select>
+              </div>
+              <div class="field field-full">
+                <label for="pain_point">Kendala Utama</label>
+                <textarea id="pain_point" name="pain_point" maxlength="2000"></textarea>
+              </div>
+              <div class="field field-full">
+                <label for="desired_outcome">Outcome yang Diinginkan</label>
+                <textarea id="desired_outcome" name="desired_outcome" maxlength="2000"></textarea>
               </div>
             </div>
-            <div class="step">
-              <span>2</span>
-              <div>
-                <h4>Checkout</h4>
-                <p>Masukkan data perusahaan, pilih plan, dan lakukan pembayaran.</p>
-              </div>
+            <div class="cta-row">
+              <button type="submit" class="btn btn-primary">Kirim & Minta Bantuan WA</button>
+              <a class="btn btn-secondary" href="/checkout.html">Lewati, lanjut checkout langsung</a>
             </div>
-            <div class="step">
-              <span>3</span>
-              <div>
-                <h4>Eksekusi campaign</h4>
-                <p>Set objective, jalankan action, dan pantau hasil dari report periodik.</p>
-              </div>
-            </div>
-          </div>
+            <p class="notice" data-contact-status>Siap menerima data Anda.</p>
+          </form>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
       <div class="container">
-        <p>© 2026 SynapseTech · Autoviral Business Platform</p>
+        <p>© <span data-year></span> SynapseTech · Autoviral Autonomous Platform</p>
       </div>
     </footer>
+    <script src="/site.js?v=20260401-enterprise"></script>
   </body>
 </html>

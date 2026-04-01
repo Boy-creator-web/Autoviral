@@ -3,101 +3,81 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FAQ | Autoviral by SynapseTech</title>
+    <title>FAQ | Autoviral</title>
     <meta
       name="description"
-      content="Pertanyaan umum seputar paket, implementasi, pembayaran, keamanan, dan dukungan Autoviral."
+      content="Pertanyaan umum seputar harga, pembayaran, eksekusi otomatis, report, dan support WhatsApp."
     />
-    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/styles.css?v=20260401-enterprise2" />
   </head>
-  <body data-page="faq">
-    <header class="site-header">
+  <body>
+    <header class="header">
       <div class="container nav">
-        <a href="/" class="logo">Autoviral</a>
-        <nav class="nav-links">
+        <a class="brand" href="/">Autoviral</a>
+        <nav class="menu">
           <a href="/pricing.html">Harga</a>
           <a href="/solutions.html">Solusi</a>
-          <a href="/checkout.html">Checkout</a>
-          <a href="/faq.html">FAQ</a>
-          <a href="/contact.html">Kontak</a>
+          <a href="/enterprise.html">Enterprise</a>
+          <a href="/faq.html" aria-current="page">FAQ</a>
+          <a class="btn btn-secondary" href="/contact.html">Bantuan WA</a>
+          <a class="btn btn-primary" href="/checkout.html">Mulai</a>
         </nav>
       </div>
     </header>
 
-    <main>
-      <section class="section section-dark">
-        <div class="container">
-          <h1>Frequently Asked Questions</h1>
-          <p class="subtitle">
-            Jawaban cepat untuk hal penting sebelum Anda memutuskan paket.
-          </p>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container grid-2">
-          <article class="card">
-            <h3>Apakah saya harus setup teknis sendiri?</h3>
+    <main class="section">
+      <div class="container">
+        <h1>FAQ - Pertanyaan yang sering ditanyakan</h1>
+        <div class="faq-list">
+          <article class="faq-item">
+            <h3>Apakah saya harus bicara dengan sales dulu?</h3>
             <p>
-              Tidak. Tim kami bantu onboarding, setup awal campaign, dan integrasi sesuai paket yang
-              dipilih.
+              Tidak. Flow kami full autonomous: lihat paket, pilih, checkout, bayar, dan sistem langsung
+              memproses flow Anda. WhatsApp hanya untuk bantuan opsional.
             </p>
           </article>
-          <article class="card">
-            <h3>Berapa lama sampai campaign jalan?</h3>
+          <article class="faq-item">
+            <h3>Bagaimana saya tahu paket mana yang cocok?</h3>
             <p>
-              Rata-rata 1–3 hari untuk setup dasar. Flow lanjutan bergantung kebutuhan integrasi dan
-              approval konten.
+              Di halaman Harga, setiap paket punya kuota video/campaign/scraper. Jika masih ragu, gunakan
+              Enterprise page untuk estimator kebutuhan.
             </p>
           </article>
-          <article class="card">
-            <h3>Apakah bisa upgrade/downgrade paket?</h3>
+          <article class="faq-item">
+            <h3>Pembayaran seperti apa?</h3>
             <p>
-              Bisa. Paket dapat disesuaikan per siklus billing, termasuk penambahan kuota jika dibutuhkan.
+              Checkout membuat subscription + payment record otomatis. Anda dapat memakai provider yang
+              tersedia dan menerima invoice dari sistem.
             </p>
           </article>
-          <article class="card">
-            <h3>Bagaimana metode pembayaran?</h3>
+          <article class="faq-item">
+            <h3>Setelah bayar, apa yang terjadi?</h3>
             <p>
-              Saat ini tersedia invoice manual transfer. Gateway payment dapat diaktifkan sesuai kebutuhan
-              enterprise.
+              Sistem langsung membuat action campaign awal dan flow operasional untuk eksekusi. Anda tinggal
+              memantau hasil dan report periodik.
             </p>
           </article>
-          <article class="card">
-            <h3>Bagaimana keamanan data?</h3>
+          <article class="faq-item">
+            <h3>Bagaimana laporan hasilnya?</h3>
             <p>
-              Akses API menggunakan token, audit log untuk aksi penting, dan pembatasan request untuk
-              proteksi abuse.
+              Report tersedia dari pipeline backend: action - result - report. Setiap aktivitas dan pembayaran
+              tercatat untuk audit.
             </p>
           </article>
-          <article class="card">
-            <h3>Apakah ada kontrak minimum?</h3>
+          <article class="faq-item">
+            <h3>Apakah data saya aman?</h3>
             <p>
-              Umumnya per bulan. Untuk enterprise/custom rollout, kami sediakan opsi kontrak khusus.
+              API dilengkapi auth token, rate limiting, audit logging, webhook idempotency, dan monitor endpoint
+              untuk menjaga reliability.
             </p>
           </article>
-        </div>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div class="container footer-grid">
-        <div>
-          <h4>Autoviral by SynapseTech</h4>
-          <p>Autonomous growth engine untuk bisnis yang ingin scale lebih cepat.</p>
-        </div>
-        <div>
-          <h4>Menu</h4>
-          <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/pricing.html">Harga</a></li>
-            <li><a href="/checkout.html">Checkout</a></li>
-          </ul>
         </div>
       </div>
-      <p class="copyright">© <span id="year"></span> SynapseTech. All rights reserved.</p>
-    </footer>
+    </main>
 
-    <script src="/site.js?v=20260401c"></script>
+    <footer class="footer">
+      <div class="container">© <span data-year></span> Autoviral by SynapseTech</div>
+    </footer>
+    <script src="/site.js?v=20260401-enterprise2"></script>
   </body>
 </html>
